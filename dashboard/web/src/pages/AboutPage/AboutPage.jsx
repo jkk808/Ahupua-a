@@ -6,9 +6,7 @@ const AboutPage = () => {
     <>
       <Metadata title="About" description="About page" />
 
-      <p>
-        test about page
-      </p>
+      <h1>About Page</h1>
       <Link to={routes.home()}>Return Home</Link>
     </>
   )

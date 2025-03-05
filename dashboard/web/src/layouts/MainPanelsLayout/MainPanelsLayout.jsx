@@ -5,14 +5,15 @@ import React from 'react';
 
 const MainPanelLayout = ({ children }) => {
   return (
-    <>
-      <div className="flex flex-col w-full h-screen bg-gray-50">
-      <TopPanel />        
-
-        <main>          
-          <SidePanel />
-        </main>
-
+    <>      
+      <div className='flex h-screen'>
+          <SidePanel />   
+        <div className='flex-1 flex flex-col'>
+          <TopPanel />        
+          <main className='flex-1 ml-64 overflow-auto p-6'>                           
+            {children}
+          </main>      
+        </div>
       </div>
     </>
   )
