@@ -9972,6 +9972,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"class-variance-authority@npm:^0.7.1":
+  version: 0.7.1
+  resolution: "class-variance-authority@npm:0.7.1"
+  dependencies:
+    clsx: "npm:^2.1.1"
+  checksum: 10c0/0f438cea22131808b99272de0fa933c2532d5659773bfec0c583de7b3f038378996d3350683426b8e9c74a6286699382106d71fbec52f0dd5fbb191792cccb5b
+  languageName: node
+  linkType: hard
+
 "clean-stack@npm:^2.0.0":
   version: 2.2.0
   resolution: "clean-stack@npm:2.2.0"
@@ -10097,6 +10106,13 @@ __metadata:
   version: 1.0.4
   resolution: "clone@npm:1.0.4"
   checksum: 10c0/2176952b3649293473999a95d7bebfc9dc96410f6cbd3d2595cf12fd401f63a4bf41a7adbfd3ab2ff09ed60cb9870c58c6acdd18b87767366fabfc163700f13b
+  languageName: node
+  linkType: hard
+
+"clsx@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "clsx@npm:2.1.1"
+  checksum: 10c0/c4c8eb865f8c82baab07e71bfa8897c73454881c4f99d6bc81585aecd7c441746c1399d08363dc096c550cceaf97bd4ce1e8854e1771e9998d9f94c4fe075839
   languageName: node
   linkType: hard
 
@@ -16012,6 +16028,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lucide-react@npm:^0.479.0":
+  version: 0.479.0
+  resolution: "lucide-react@npm:0.479.0"
+  peerDependencies:
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/a0a13aea535cfcd85a38f66bcc931110af28f232457334a6ed0cd1393f565be28139495864831d835c57bd071b5ddd3036b66eda3a2e8c5d401ece71ee29d970
+  languageName: node
+  linkType: hard
+
 "lz-string@npm:^1.5.0":
   version: 1.5.0
   resolution: "lz-string@npm:1.5.0"
@@ -19255,9 +19280,14 @@ __metadata:
     "@redwoodjs/core": "npm:8.5.0"
     "@redwoodjs/project-config": "npm:8.5.0"
     autoprefixer: "npm:^10.4.20"
+    class-variance-authority: "npm:^0.7.1"
+    clsx: "npm:^2.1.1"
+    lucide-react: "npm:^0.479.0"
     postcss: "npm:^8.5.3"
     prettier-plugin-tailwindcss: "npm:^0.5.12"
+    tailwind-merge: "npm:^3.0.2"
     tailwindcss: "npm:^4.0.9"
+    tailwindcss-animate: "npm:^1.0.7"
   languageName: unknown
   linkType: soft
 
@@ -20435,6 +20465,22 @@ __metadata:
     systeminformation: lib/cli.js
   checksum: 10c0/d4d750d82345081a6a12200ec8f559ff65a8c28d9797d4368c246682ee02131ee08a4227e4401b6680839f0f0e1a72758071fd84eae2f0584a89e948d583703f
   conditions: (os=darwin | os=linux | os=win32 | os=freebsd | os=openbsd | os=netbsd | os=sunos | os=android)
+  languageName: node
+  linkType: hard
+
+"tailwind-merge@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "tailwind-merge@npm:3.0.2"
+  checksum: 10c0/73f528345e5130e7690c5c57701155849ae4f0834e0a4bf56bc03e25d4563d45d4905ff9c487a7dce9efdfa18689a223e78365962105ad0e2f2d1226216c66ef
+  languageName: node
+  linkType: hard
+
+"tailwindcss-animate@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "tailwindcss-animate@npm:1.0.7"
+  peerDependencies:
+    tailwindcss: "*"
+  checksum: 10c0/ec7dbd1631076b97d66a1fbaaa06e0725fccfa63119221e8d87a997b02dcede98ad88bb1ef6665b968f5d260fcefb10592e0299ca70208d365b37761edf5e19a
   languageName: node
   linkType: hard
 
