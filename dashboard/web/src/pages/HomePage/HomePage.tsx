@@ -1,5 +1,7 @@
 import { Link, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
+import SensorPanel from 'src/components/Panels/SensorPanel/SensorPanel';
+import { useState } from 'react';
 
 interface SensorData {
   id: string;
@@ -61,17 +63,33 @@ const HomePage = ({
   sensors,
   onSensorClick
 }) => {
+  const [selectedSensor, setSelectedSensor] = useState<SensorData | null>(null);
   return (
     <>
       <Metadata title="Home" description="Home page" />
-
+      
+      <SensorPanel
+        sensorData={selectedSensor}
+        onClose={() => setSelectedSensor(null)}
+      >
+      </SensorPanel>
       Overhead map visualization of Pu'uhonua with sensors placed at appropriate points
-
-      <div className='flex flex-col space-y-4'>
-        <button className='border border-gray-200 drop-shadow-sm w-fit text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>Top Bed Water Sensor </button>
-        <button className='border border-gray-200 drop-shadow-sm w-fit text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>Middle Bed Water Sensor</button>
-        <button className='border border-gray-200 drop-shadow-sm w-fit text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>Bottom Bed Water Sensor</button>
-        <button className='border border-gray-200 drop-shadow-sm w-fit text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>Stream USGS Sensor</button>
+      <div className='flex flex-col space-y-4'>  
+        <button 
+        onClick={() => setSelectedSensor(sensorData[0])}
+        className='border border-gray-200 drop-shadow-sm w-fit text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
+          Top Bed Water Sensor 
+        </button>
+        <button 
+        onClick={() => setSelectedSensor(sensorData[1])}
+        className='border border-gray-200 drop-shadow-sm w-fit text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
+          Middle Bed Water Sensor 
+        </button>
+        <button 
+        onClick={() => setSelectedSensor(sensorData[2])}
+        className='border border-gray-200 drop-shadow-sm w-fit text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
+          Bottom Bed Water Sensor 
+        </button>
       </div>
     </>
   )

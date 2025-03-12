@@ -3,9 +3,7 @@ const SensorPanel = ({ sensorData, onClose}) => {
   if (!sensorData) return null
   return (
     <div>
-      <h2>{'SensorPanel'}</h2>
-      <p>{'Find me in ./web/src/components/SensorPanel/SensorPanel.jsx'}</p>
-      <div className="fixed right-0 top-0 h-full w-96 bg-white shadow-lg border-l border-gray-200 p-6 transform transition-transform duration-300 ease-in-out">
+      <div className="fixed right-0 h-full w-1/2 bg-white shadow-lg border-l border-gray-200 p-6 transform transition-transform duration-300 ease-in-out">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-lg font-semibold">{sensorData.name}</h2>
         <button
