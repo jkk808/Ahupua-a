@@ -12,12 +12,13 @@ import { Set, Router, Route } from '@redwoodjs/router'
 // import ScaffoldLayout from 'src/layouts/ScaffoldLayout'
 import MainPanelLayout from './layouts/MainPanelsLayout/MainPanelsLayout'
 
+
 const Routes = () => {
   return (
     <Router>
       <Set wrap={MainPanelLayout}>        
         <Route path="/" page={HomePage} name="home" />      
-        <Route path="/about" page={AboutPage} name="about" />
+        <Route path="/about" page={AboutPage} name="about" />        
       </Set>
       <Route notfound page={NotFoundPage} />
     </Router>

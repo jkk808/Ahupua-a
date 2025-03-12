@@ -2,95 +2,31 @@ import { Link, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 import SensorPanel from 'src/components/Panels/SensorPanel/SensorPanel';
 import { useState } from 'react';
+import { Sensor } from 'types/graphql';
+// import SensorCell from 'src/components/Sensor/SensorCell/SensorCell'
 
-interface SensorData {
-  id: string;
-  name: string;
-  location: string;
-  zone: 'upland' | 'midland' | 'coastal';
-  metrics: {
-    soilType?: string;
-    waterLevel?: number;
-    temperature?: number;
-    soilPower?: number;
-  };
-  xPosition: number;
-  yPosition: number;
-}
-const sensorData: SensorData[] = [
-  {
-    id: "1",
-    name: "Upland Sensor 1",
-    location: "Upper Forest Zone",
-    zone: "upland",
-    metrics: {
-      soilType: "Rocky Volcanic",
-      temperature: 22,
-      waterLevel: 85,
-    },
-    xPosition: 40,
-    yPosition: 30,
-  },
-  {
-    id: "2",
-    name: "Midland Sensor 1",
-    location: "Agricultural Zone",
-    zone: "midland",
-    metrics: {
-      soilType: "Alluvial",
-      soilPower: 75,
-      waterLevel: 60,
-    },
-    xPosition: 50,
-    yPosition: 50,
-  },
-  {
-    id: "3",
-    name: "Coastal Sensor 1",
-    location: "Coastal Area",
-    zone: "coastal",
-    metrics: {
-      soilType: "Sandy Loam",
-      temperature: 26,
-      waterLevel: 40,
-    },
-    xPosition: 60,
-    yPosition: 70,
-  },
-];
 
-const HomePage = ({
-  sensors,
-  onSensorClick
-}) => {
-  const [selectedSensor, setSelectedSensor] = useState<SensorData | null>(null);
+
+
+const HomePage = () => {
+  const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
   return (
     <>
       <Metadata title="Home" description="Home page" />
-      
+
       <SensorPanel
         sensorData={selectedSensor}
         onClose={() => setSelectedSensor(null)}
       >
       </SensorPanel>
       Overhead map visualization of Pu'uhonua with sensors placed at appropriate points
-      <div className='flex flex-col space-y-4'>  
-        <button 
-        onClick={() => setSelectedSensor(sensorData[0])}
-        className='border border-gray-200 drop-shadow-sm w-fit text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
-          Top Bed Water Sensor 
-        </button>
-        <button 
-        onClick={() => setSelectedSensor(sensorData[1])}
-        className='border border-gray-200 drop-shadow-sm w-fit text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
-          Middle Bed Water Sensor 
-        </button>
-        <button 
-        onClick={() => setSelectedSensor(sensorData[2])}
-        className='border border-gray-200 drop-shadow-sm w-fit text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
-          Bottom Bed Water Sensor 
-        </button>
+
+      {/* <SensorCell></SensorCell> */}
+
+      <div className='flex flex-col space-y-4'>          
+
       </div>
+      <Link to={routes.about()}>Go to about</Link>
     </>
   )
 }
