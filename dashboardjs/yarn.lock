@@ -17387,6 +17387,7 @@ __metadata:
     "@redwoodjs/web": "npm:8.5.0"
     "@types/react": "npm:^18.2.55"
     "@types/react-dom": "npm:^18.2.19"
+    humanize-string: "npm:2.1.0"
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
   languageName: unknown

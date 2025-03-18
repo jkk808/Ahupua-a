@@ -1,0 +1,30 @@
+import { db } from 'src/lib/db'
+
+export const sensors = () => {
+  return db.sensor.findMany()
+}
+
+export const sensor = ({ id }) => {
+  return db.sensor.findUnique({
+    where: { id },
+  })
+}
+
+export const createSensor = ({ input }) => {
+  return db.sensor.create({
+    data: input,
+  })
+}
+
+export const updateSensor = ({ id, input }) => {
+  return db.sensor.update({
+    data: input,
+    where: { id },
+  })
+}
+
+export const deleteSensor = ({ id }) => {
+  return db.sensor.delete({
+    where: { id },
+  })
+}

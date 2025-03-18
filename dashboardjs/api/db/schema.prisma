@@ -22,3 +22,7 @@ model UserExample {
   email String  @unique
   name  String?
 }
+model Sensor {
+  id    Int     @id @default(autoincrement())
+  name  String?
+}
