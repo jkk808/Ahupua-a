@@ -10,17 +10,18 @@
 import { Set, Router, Route } from '@redwoodjs/router'
 
 import ScaffoldLayout from 'src/layouts/ScaffoldLayout'
+import MainPanelLayout from './layouts/MainPanelsLayout/MainPanelsLayout'
 
 const Routes = () => {
   return (
     <Router>
-      <Set wrap={ScaffoldLayout} title="Sensors" titleTo="sensors" buttonLabel="New Sensor" buttonTo="newSensor">
+      <Set wrap={MainPanelLayout} title="Sensors" titleTo="sensors" buttonLabel="New Sensor" buttonTo="newSensor">
+        <Route path="/home" page={HomePage} name="home" />
         <Route path="/sensors/new" page={SensorNewSensorPage} name="newSensor" />
         <Route path="/sensors/{id:Int}/edit" page={SensorEditSensorPage} name="editSensor" />
         <Route path="/sensors/{id:Int}" page={SensorSensorPage} name="sensor" />
         <Route path="/sensors" page={SensorSensorsPage} name="sensors" />
       </Set>
-      <Route path="/home" page={HomePage} name="home" />
       <Route notfound page={NotFoundPage} />
     </Router>
   )
