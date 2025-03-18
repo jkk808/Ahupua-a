@@ -54,7 +54,7 @@ const PostsList = ({ posts }) => {
               <td>{truncate(post.title)}</td>
               <td>{truncate(post.body)}</td>
               <td>{timeTag(post.createdAt)}</td>
-              <td>
+              {/* <td>
                 <nav className="rw-table-actions">
                   <Link
                     to={routes.post({ id: post.id })}
@@ -79,7 +79,7 @@ const PostsList = ({ posts }) => {
                     Delete
                   </button>
                 </nav>
-              </td>
+              </td> */}
             </tr>
           ))}
         </tbody>

@@ -60,6 +60,7 @@ const sensorData: SensorData[] = [
     yPosition: 70,
   },
 ];
+
 const MainPanelLayout = ({ children }) => {
   return (
     <>      
