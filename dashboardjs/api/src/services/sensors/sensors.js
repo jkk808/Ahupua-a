@@ -7,6 +7,7 @@ export const sensors = () => {
 export const sensor = ({ id }) => {
   return db.sensor.findUnique({
     where: { id },
+    include: { metrics: true },  // Ensure metrics are included in the query
   })
 }
 

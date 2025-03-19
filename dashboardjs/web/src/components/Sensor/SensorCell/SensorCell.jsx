@@ -5,6 +5,12 @@ export const QUERY = gql`
     sensor: sensor(id: $id) {
       id
       name
+      location
+      metrics {
+        id
+        value
+        type        
+      }
     }
   }
 `

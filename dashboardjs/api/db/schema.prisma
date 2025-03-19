@@ -20,7 +20,7 @@ generator client {
 model Sensor {
   id        Int         @id @default(autoincrement())
   name      String?
-  location  String
+  location  String?
   metrics   Metric[]
 }
 
@@ -28,14 +28,15 @@ model Metric {
   id        Int         @id @default(autoincrement())
   value     Float
   timestamp DateTime    @default(now())
-  type      MetricType
+  type      String      // can use enum when transfer to postgres
   sensor    Sensor?     @relation(fields: [sensorID], references: [id])
   sensorID  Int
 }
 
-enum MetricType {
-  TEMP
-  WATER_LEVEL
-  PH
-  CO2
-}
+// USING STRING AS PLACEHOLDER FOR THIS ENUM
+// enum MetricType {
+//   TEMP
+//   WATER_LEVEL
+//   PH
+//   CO2
+// }

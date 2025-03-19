@@ -48,6 +48,25 @@ const Sensor = ({ sensor }) => {
               <th>Name</th>
               <td>{sensor.name}</td>
             </tr>
+            <tr>
+              <th>Location</th>
+              <td>{sensor.location}</td>
+            </tr>
+            <tr>
+              <th>Scans</th>
+              <td>
+                {sensor.metrics && sensor.metrics.length > 0 ? (
+                  sensor.metrics.map((metric) => (
+                    <li key={metric.id}>
+                      <strong>Type:</strong> {metric.type} <br />
+                      <strong>Value:</strong> {metric.value}
+                    </li>
+                  ))
+                ) : (
+                  <p>No metrics available</p>
+                )}
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

@@ -2,6 +2,17 @@ export const schema = gql`
   type Sensor {
     id: Int!
     name: String
+    location: String
+    metrics: [Metric]
+  }
+
+  type Metric {
+    id: Int!   
+    value: Float
+    timestamp: DateTime   
+    type: String     
+    sensor: Sensor    
+    sensorID: Int!
   }
 
   type Query {
