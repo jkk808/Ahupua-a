@@ -1,0 +1,27 @@
+.map-container {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Ensure the map container has proper dimensions */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* Ensure map controls are visible */
+.leaflet-control-container {
+  z-index: 2;
+}
+
+/* Ensure popups are visible */
+.leaflet-popup {
+  z-index: 3;
+}

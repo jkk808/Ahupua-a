@@ -14,7 +14,9 @@
     "@redwoodjs/forms": "8.5.0",
     "@redwoodjs/router": "8.5.0",
     "@redwoodjs/web": "8.5.0",
+    "@types/leaflet": "^1.9.16",
     "humanize-string": "2.1.0",
+    "leaflet": "^1.9.4",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
