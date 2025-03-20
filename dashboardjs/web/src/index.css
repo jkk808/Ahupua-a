@@ -11,3 +11,112 @@
 /**
  * END --- SETUP TAILWINDCSS EDIT
  */
+
+/* Map styles */
+.map-wrapper {
+  position: fixed;
+  width: calc(100% - 256px);
+  height: calc(100vh - 88px);
+  top: 92px;
+  left: 260px;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.map-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 99.7% !important;
+  height: 99.7% !important;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Override Leaflet's default container styles */
+.map-container .leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background: #f8f9fa;
+  overflow: hidden;
+}
+
+/* Prevent Leaflet from modifying container size */
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Ensure Leaflet map pane stays within bounds */
+.leaflet-map-pane {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+.map-error {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+  border-radius: 4px;
+  z-index: 1000;
+  color: red;
+  max-width: 300px;
+  word-wrap: break-word;
+}
+
+/* UI Elements */
+.alerts-container,
+.date-time-container,
+.weather-container {
+  position: fixed;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+  border-radius: 4px;
+  max-width: 300px;
+  word-wrap: break-word;
+}
+
+.alerts-container {
+  top: 10px;
+  right: 10px;
+}
+
+.date-time-container {
+  top: 10px;
+  left: 10px;
+}
+
+.weather-container {
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Ensure popups are properly styled */
+.custom-popup {
+  max-width: 300px;
+  word-wrap: break-word;
+}
+
+/* Prevent text overflow */
+* {
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+}
+
+/* Ensure main content area respects side panel */
+main {
+  margin-left: 256px;
+  width: calc(100% - 256px);
+}
