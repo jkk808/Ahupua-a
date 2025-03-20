@@ -9,6 +9,16 @@ const CREATE_SENSOR_MUTATION = gql`
   mutation CreateSensorMutation($input: CreateSensorInput!) {
     createSensor(input: $input) {
       id
+      name
+      location
+      latitude
+      longitude
+      metrics {
+        id
+        value
+        type
+        timestamp
+      }
     }
   }
 `
@@ -28,7 +38,13 @@ const NewSensor = () => {
   )
 
   const onSave = (input) => {
-    createSensor({ variables: { input } })
+    // Convert latitude and longitude to numbers
+    const formattedInput = {
+      ...input,
+      latitude: parseFloat(input.latitude),
+      longitude: parseFloat(input.longitude),
+    }
+    createSensor({ variables: { input: formattedInput } })
   }
 
   return (

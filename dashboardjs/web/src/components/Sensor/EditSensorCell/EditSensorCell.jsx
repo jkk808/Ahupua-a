@@ -10,6 +10,15 @@ export const QUERY = gql`
     sensor: sensor(id: $id) {
       id
       name
+      location
+      latitude
+      longitude
+      metrics {
+        id
+        value
+        type
+        timestamp
+      }
     }
   }
 `
@@ -19,6 +28,15 @@ const UPDATE_SENSOR_MUTATION = gql`
     updateSensor(id: $id, input: $input) {
       id
       name
+      location
+      latitude
+      longitude
+      metrics {
+        id
+        value
+        type
+        timestamp
+      }
     }
   }
 `

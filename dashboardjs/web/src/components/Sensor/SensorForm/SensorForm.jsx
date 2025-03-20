@@ -39,6 +39,61 @@ const SensorForm = (props) => {
 
         <FieldError name="name" className="rw-field-error" />
 
+        <Label
+          name="location"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Location
+        </Label>
+
+        <TextField
+          name="location"
+          defaultValue={props.sensor?.location}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+        />
+
+        <FieldError name="location" className="rw-field-error" />
+
+        <Label
+          name="latitude"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Latitude
+        </Label>
+
+        <TextField
+          name="latitude"
+          defaultValue={props.sensor?.latitude}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+          type="number"
+          step="any"
+        />
+
+        <FieldError name="latitude" className="rw-field-error" />
+
+        <Label
+          name="longitude"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Longitude
+        </Label>
+
+        <TextField
+          name="longitude"
+          defaultValue={props.sensor?.longitude}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+          type="number"
+          step="any"
+        />
+
+        <FieldError name="longitude" className="rw-field-error" />
+
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">
             Save
