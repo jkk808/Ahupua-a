@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-
+import { useQuery } from '@redwoodjs/web'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -28,47 +28,49 @@ const userIcon = new L.Icon({
   shadowPopupAnchor: [1, -34],
 })
 
-// Sample data for Oahu locations
+// Create custom icon for sensors
+const sensorIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [0, -41],
+  shadowSize: [41, 41],
+  shadowAnchor: [12, 41],
+  shadowPopupAnchor: [1, -34],
+})
 
-// TODO: Replace with data from backend(GraphQL)
-const sampleLocations = [
-  {
-    position: [21.3069, -157.8583], // Waikiki Beach
-    title: 'Waikiki Loʻi',
-    content: `
-      <div style="padding: 10px;">
-        <h3>Waikiki Loʻi</h3>
-        <p>Ocygen Level: 80.. Status: Good</p>
-        <button onclick="window.open('https://www.gohawaii.com/islands/oahu/regions/honolulu/waikiki', '_blank')">
-          Learn More
-        </button>
-      </div>
-    `,
-  },
-  {
-    position: [21.3724, -157.7106], // Kailua Beach
-    title: 'Maunawili',
-    content: `
-      <div style="padding: 10px;">
-        <h3>Maunawili</h3>
-        <p>Maunawili is celebrated in story and chant for its association with Akua (gods), Aliʻi (chiefs), cultural heroes, and important historical figures, including Queen Liliʻuokalani. Ancient and historic sites throughout Maunawili include heiau (temple or sacred site), sacred stones, petroglyphs, Hawaiian burials, alanui (path or trail), house sites, grinding stones, irrigated and dryland agricultural terraces, large ʻauwai (irrigation ditches) related to extensive loʻi (taro patches), and 19th and early 20th century structures related to agriculture and food production.</p>
-        <button onclick="window.open('https://www.huimaunawilikawainui.com/about-maunawili', '_blank')">
-          Learn More
-        </button>
-      </div>
-    `,
-  },
-]
+const GET_SENSORS = gql`
+  query GetSensors {
+    sensors {
+      id
+      name
+      location
+      latitude
+      longitude
+      metrics {
+        id
+        value
+        type
+        timestamp
+      }
+    }
+  }
+`
 
 const Map = () => {
   const [error, setError] = useState(null)
+  const [isMapReady, setIsMapReady] = useState(false)
   const mapRef = useRef(null)
   const markerRef = useRef(null)
   const mapContainerRef = useRef(null)
+  const { data, loading, error: queryError } = useQuery(GET_SENSORS)
 
+  // Initialize map
   useEffect(() => {
     let mounted = true
     let map = null
+    let initTimeout = null
 
     const initMap = () => {
       try {
@@ -77,14 +79,30 @@ const Map = () => {
           return
         }
 
+        // Ensure the container is in the DOM and has dimensions
+        if (!document.body.contains(mapContainerRef.current)) {
+          console.log('Container not in DOM, retrying...')
+          return
+        }
+
+        const container = mapContainerRef.current
+        if (!container.offsetWidth || !container.offsetHeight) {
+          console.log('Container has no dimensions, retrying...')
+          return
+        }
+
+        console.log('Initializing map with container:', container)
+
         // Initialize map with Oahu's center coordinates
-        map = L.map(mapContainerRef.current, {
+        map = L.map(container, {
           center: [21.4735, -157.965], // Center of Oahu
-          zoom: 10, // Closer zoom to show Oahu
+          zoom: 11.2, // Closer zoom to show Oahu
           zoomControl: true,
           attributionControl: true,
+          dragging: true,
+          tap: true,
+          scrollWheelZoom: true,
         })
-        mapRef.current = map
 
         // Add tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -92,76 +110,228 @@ const Map = () => {
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         }).addTo(map)
 
-        // Get user location
-        if ('geolocation' in navigator) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              if (!mounted) return
+        // Store map reference
+        mapRef.current = map
+        console.log('Map initialized and stored in ref:', map)
 
-              const { latitude, longitude } = position.coords
-              console.log('User location:', latitude, longitude)
+        // Set map as ready immediately after initialization
+        setIsMapReady(true)
+        console.log('Map ready state set to true')
 
-              // Add marker at user's location with custom icon
-              markerRef.current = L.marker([latitude, longitude], {
-                icon: userIcon,
-              })
-                .bindPopup('Your current location')
-                .addTo(map)
-            },
-            (error) => {
-              if (!mounted) return
-              console.error('Location error:', error)
-              setError(
-                'Unable to get your location. Please enable location services.'
-              )
-            }
-          )
-        } else {
-          setError('Geolocation is not supported by your browser')
-        }
-
-        // Add predefined location markers
-        sampleLocations.forEach((location) => {
-          L.marker(location.position)
-            .bindPopup(location.content, {
-              maxWidth: 300,
-              className: 'custom-popup',
-            })
-            .addTo(map)
-        })
+        // Force a map resize after initialization
+        setTimeout(() => {
+          map.invalidateSize()
+        }, 100)
       } catch (err) {
         console.error('Map initialization error:', err)
         setError('Failed to initialize map')
       }
     }
 
-    // Initialize map
-    initMap()
+    // Initialize map after a short delay
+    initTimeout = setTimeout(initMap, 100)
 
-    // Cleanup
     return () => {
       mounted = false
+      if (initTimeout) {
+        clearTimeout(initTimeout)
+      }
       if (map) {
         map.remove()
       }
     }
-  }, [])
+  }, []) // Only run once on mount
 
-  if (error) {
-    return <div style={{ padding: '20px', color: 'red' }}>{error}</div>
+  // Get user location immediately
+  useEffect(() => {
+    if (!mapRef.current || !isMapReady) {
+      console.log('Map not ready for user location:', {
+        mapRef: !!mapRef.current,
+        isMapReady
+      })
+      return
+    }
+
+    const map = mapRef.current
+    console.log('Adding user location to map')
+
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          if (!mapRef.current) {
+            console.log('Map reference lost while getting location')
+            return
+          }
+
+          const { latitude, longitude } = position.coords
+          console.log('User location received:', latitude, longitude)
+
+          // Remove existing user marker if any
+          if (markerRef.current) {
+            map.removeLayer(markerRef.current)
+          }
+
+          // Add marker at user's location with custom icon
+          markerRef.current = L.marker([latitude, longitude], {
+            icon: userIcon,
+          })
+            .bindPopup('Your current location')
+            .addTo(map)
+
+          console.log('User location marker added successfully')
+        },
+        (error) => {
+          console.error('Location error:', error)
+          setError(
+            'Unable to get your location. Please enable location services.'
+          )
+        }
+      )
+    } else {
+      setError('Geolocation is not supported by your browser')
+    }
+  }, [mapRef.current, isMapReady]) // Run when map is initialized and ready
+
+  // Add sensor markers when data is available and map is ready
+  useEffect(() => {
+    console.log('Sensor data received:', data?.sensors)
+    console.log('Map ready status:', isMapReady)
+    console.log('Map reference:', mapRef.current)
+
+    if (!mapRef.current || !data?.sensors || !isMapReady) {
+      console.log('Map, data, or ready status not available:', {
+        mapRef: !!mapRef.current,
+        sensors: !!data?.sensors,
+        isMapReady
+      })
+      return
+    }
+
+    const map = mapRef.current
+    console.log('Adding markers to map:', map)
+
+    // Force a map resize before adding markers
+    map.invalidateSize()
+
+    // Clear existing markers if any
+    map.eachLayer((layer) => {
+      if (layer instanceof L.Marker && layer !== markerRef.current) { // Don't remove user marker
+        console.log('Removing existing marker:', layer)
+        map.removeLayer(layer)
+      }
+    })
+
+    // Add markers immediately without delay
+    data.sensors.forEach((sensor) => {
+      console.log('Processing sensor:', {
+        name: sensor.name,
+        location: sensor.location,
+        lat: sensor.latitude,
+        lng: sensor.longitude,
+        metrics: sensor.metrics
+      })
+
+      // Validate coordinates
+      if (!sensor.latitude || !sensor.longitude) {
+        console.error('Invalid coordinates for sensor:', sensor.name)
+        return
+      }
+
+      const content = `
+        <div style="padding: 10px;">
+          <h3>${sensor.name || 'Unnamed Sensor'}</h3>
+          <p>Location: ${sensor.location || 'No location specified'}</p>
+          ${sensor.metrics && sensor.metrics.length > 0
+            ? sensor.metrics.map(metric => `
+                <p>${metric.type}: ${metric.value}</p>
+              `).join('')
+            : '<p>No metrics available</p>'
+          }
+          <button onclick="window.open('https://www.google.com/maps?q=${sensor.latitude},${sensor.longitude}', '_blank')">
+            View on Google Maps
+          </button>
+        </div>
+      `
+
+      try {
+        console.log('Creating marker at coordinates:', [sensor.latitude, sensor.longitude])
+        const marker = L.marker([sensor.latitude, sensor.longitude], {
+          icon: sensorIcon
+        })
+          .bindPopup(content, {
+            maxWidth: 300,
+            className: 'custom-popup',
+          })
+          .addTo(map)
+
+        console.log('Successfully added marker for sensor:', sensor.name)
+        console.log('Marker position:', marker.getLatLng())
+        console.log('Marker visible:', marker.getElement()?.style.display !== 'none')
+      } catch (error) {
+        console.error('Error adding marker for sensor:', sensor.name, error)
+      }
+    })
+  }, [data, isMapReady])
+
+  // Log any query errors but don't block the map
+  useEffect(() => {
+    if (queryError) {
+      console.error('GraphQL query error:', queryError)
+      // Don't set error state, just log it
+    }
+  }, [queryError])
+
+  if (loading) {
+    return <div className="map-wrapper">Loading map data...</div>
   }
 
   return (
-    <div
-      ref={mapContainerRef}
-      style={{
-        height: '100vh',
-        width: '100%',
-        position: 'relative',
-        zIndex: 1,
-      }}
-    />
+    <div className="map-wrapper" style={{ width: '100%' }}>
+      <div
+        ref={mapContainerRef}
+        className="map-container"
+        style={{
+          width: '100%',
+          touchAction: 'none',
+        }}
+      />
+      {error && (
+        <div className="map-error">
+          {error}
+        </div>
+      )}
+    </div>
   )
 }
+
+// Add this CSS to ensure the map container has proper dimensions
+const styles = `
+  .map-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  .map-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+  }
+  .map-error {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+`
+
+// Add the styles to the document
+const styleSheet = document.createElement("style")
+styleSheet.innerText = styles
+document.head.appendChild(styleSheet)
 
 export default Map
