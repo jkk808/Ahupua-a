@@ -94,20 +94,13 @@ const Map = () => {
         console.log('Initializing map with container:', container)
 
         // Initialize map with Oahu's center coordinates
-        map = L.map(container, {
-          center: [21.4735, -157.965], // Center of Oahu
-          zoom: 11.2, // Closer zoom to show Oahu
-          zoomControl: true,
-          attributionControl: true,
-          dragging: true,
-          tap: true,
-          scrollWheelZoom: true,
-        })
+        map = L.map(container).setView([21.4735, -157.965], 11.2)
 
-        // Add tile layer
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        // Use Carto's tiles for a cleaner look
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: 'abcd',
+          maxZoom: 20
         }).addTo(map)
 
         // Store map reference
@@ -117,11 +110,6 @@ const Map = () => {
         // Set map as ready immediately after initialization
         setIsMapReady(true)
         console.log('Map ready state set to true')
-
-        // Force a map resize after initialization
-        setTimeout(() => {
-          map.invalidateSize()
-        }, 100)
       } catch (err) {
         console.error('Map initialization error:', err)
         setError('Failed to initialize map')
