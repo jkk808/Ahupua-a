@@ -7710,6 +7710,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chartjs@npm:^0.3.24":
+  version: 0.3.24
+  resolution: "chartjs@npm:0.3.24"
+  checksum: 10c0/9092f95328861e14513f45ed119250fd2eb2880c99db513b61b870bd477ac158d350bc552c2992abbf5a87054499396ccd64a097bed0ff7c9b55a5b073b5c518
+  languageName: node
+  linkType: hard
+
 "cheerio-select@npm:^2.1.0":
   version: 2.1.0
   resolution: "cheerio-select@npm:2.1.0"
@@ -15272,6 +15279,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-chartjs-2@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "react-chartjs-2@npm:5.3.0"
+  peerDependencies:
+    chart.js: ^4.1.1
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/4415d40217c084a49f9a936fbd30f67e0e705148e6f8359bec65601033d1076f31085c45793839fc29ec833e6c427b0bf9861a0c54c432c08d35bc9590ffa41a
+  languageName: node
+  linkType: hard
+
 "react-dom@npm:18.3.1":
   version: 18.3.1
   resolution: "react-dom@npm:18.3.1"
@@ -15967,7 +15984,9 @@ __metadata:
     "@redwoodjs/core": "npm:8.5.0"
     "@redwoodjs/project-config": "npm:8.5.0"
     "@shadcn/ui": "npm:^0.0.4"
+    chartjs: "npm:^0.3.24"
     prettier-plugin-tailwindcss: "npm:^0.5.12"
+    react-chartjs-2: "npm:^5.3.0"
   languageName: unknown
   linkType: soft
 

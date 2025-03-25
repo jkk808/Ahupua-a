@@ -26,6 +26,8 @@
     "@storybook/react-dom-shim@npm:7.6.17": "https://verdaccio.tobbe.dev/@storybook/react-dom-shim/-/react-dom-shim-8.0.8.tgz"
   },
   "dependencies": {
-    "@shadcn/ui": "^0.0.4"
+    "@shadcn/ui": "^0.0.4",
+    "chartjs": "^0.3.24",
+    "react-chartjs-2": "^5.3.0"
   }
 }
