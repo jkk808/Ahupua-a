@@ -1,6 +1,6 @@
 // import { Link, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
-
+import GraphCell from 'src/components/Graph/GraphCell'
 const WaterPage = () => {
   return (
     <>
@@ -10,10 +10,8 @@ const WaterPage = () => {
       <p>
         Find me in <code>./web/src/pages/WaterPage/WaterPage.jsx</code>
       </p>
-      {/*
-           My default route is named `water`, link to me with:
-           `<Link to={routes.water()}>Water</Link>`
-        */}
+      <GraphCell id={1} type={"temp"}/>
+      <GraphCell id={2} type={"temp"}/>
     </>
   )
 }
