@@ -3800,6 +3800,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@kurkle/color@npm:^0.3.0":
+  version: 0.3.4
+  resolution: "@kurkle/color@npm:0.3.4"
+  checksum: 10c0/0e9fd55c614b005c5f0c4c755bca19ec0293bc7513b4ea3ec1725234f9c2fa81afbc78156baf555c8b9cb0d305619253c3f5bca016067daeebb3d00ebb4ea683
+  languageName: node
+  linkType: hard
+
 "@listr2/prompt-adapter-enquirer@npm:2.0.12":
   version: 2.0.12
   resolution: "@listr2/prompt-adapter-enquirer@npm:2.0.12"
@@ -7710,10 +7717,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chartjs@npm:^0.3.24":
-  version: 0.3.24
-  resolution: "chartjs@npm:0.3.24"
-  checksum: 10c0/9092f95328861e14513f45ed119250fd2eb2880c99db513b61b870bd477ac158d350bc552c2992abbf5a87054499396ccd64a097bed0ff7c9b55a5b073b5c518
+"chart.js@npm:^4.4.8":
+  version: 4.4.8
+  resolution: "chart.js@npm:4.4.8"
+  dependencies:
+    "@kurkle/color": "npm:^0.3.0"
+  checksum: 10c0/4777e3fef7ccfb664c02b79f90e53fb0e46c01293bc56af5ab81aa8ffef4b1ccc675bef948b7efd071a5dd0ebd59c0e95c42ef606f728da8e3ff1741fc2d1df0
   languageName: node
   linkType: hard
 
@@ -14948,6 +14957,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier@npm:^3.5.3":
+  version: 3.5.3
+  resolution: "prettier@npm:3.5.3"
+  bin:
+    prettier: bin/prettier.cjs
+  checksum: 10c0/3880cb90b9dc0635819ab52ff571518c35bd7f15a6e80a2054c05dbc8a3aa6e74f135519e91197de63705bcb38388ded7e7230e2178432a1468005406238b877
+  languageName: node
+  linkType: hard
+
 "pretty-bytes@npm:5.6.0":
   version: 5.6.0
   resolution: "pretty-bytes@npm:5.6.0"
@@ -15397,6 +15415,13 @@ __metadata:
   dependencies:
     loose-envify: "npm:^1.1.0"
   checksum: 10c0/283e8c5efcf37802c9d1ce767f302dd569dd97a70d9bb8c7be79a789b9902451e0d16334b05d73299b20f048cbc3c7d288bbbde10b701fa194e2089c237dbea3
+  languageName: node
+  linkType: hard
+
+"react@npm:^19.0.0":
+  version: 19.0.0
+  resolution: "react@npm:19.0.0"
+  checksum: 10c0/9cad8f103e8e3a16d15cb18a0d8115d8bd9f9e1ce3420310aea381eb42aa0a4f812cf047bb5441349257a05fba8a291515691e3cb51267279b2d2c3253f38471
   languageName: node
   linkType: hard
 
@@ -15984,8 +16009,10 @@ __metadata:
     "@redwoodjs/core": "npm:8.5.0"
     "@redwoodjs/project-config": "npm:8.5.0"
     "@shadcn/ui": "npm:^0.0.4"
-    chartjs: "npm:^0.3.24"
+    chart.js: "npm:^4.4.8"
+    prettier: "npm:^3.5.3"
     prettier-plugin-tailwindcss: "npm:^0.5.12"
+    react: "npm:^19.0.0"
     react-chartjs-2: "npm:^5.3.0"
   languageName: unknown
   linkType: soft
