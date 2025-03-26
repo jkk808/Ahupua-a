@@ -11,6 +11,7 @@ export const schema = gql`
   type Query {
     metrics: [Metric!]! @requireAuth
     metric(id: Int!): Metric @requireAuth
+    metricsByType(type: String!): [Metric!]! @requireAuth
   }
 
   input CreateMetricInput {

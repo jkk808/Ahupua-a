@@ -11,16 +11,20 @@ export const sensor = ({ id }) => {
   })
 }
 
-export const sensorData =({ id, type}) => {
-  return db.sensor.findUnique({
-    where: { id },
+export const sensorsData =({ type }) => {
+  return db.sensor.findMany({
+    where: {
+      metrics: {
+        some: { type }, // Ensures only sensors with matching metrics are returned
+      },
+    },
     include: {
       metrics: {
         where: { type },
       },
     },
-  })
-}
+  });
+};
 
 export const createSensor = ({ input }) => {
   return db.sensor.create({

@@ -10,6 +10,13 @@ export const metric = ({ id }) => {
   })
 }
 
+export const metricsByType = ({ type }) => {
+  return db.metric.findMany({
+    where: { type },
+  })
+}
+
+
 export const createMetric = ({ input }) => {
   return db.metric.create({
     data: input,

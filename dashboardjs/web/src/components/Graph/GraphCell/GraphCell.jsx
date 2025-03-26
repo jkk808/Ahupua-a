@@ -1,13 +1,10 @@
 import Graph from "../Graph/Graph"
 
 export const QUERY = gql`
-  query FindSensorData($id: Int!, $type: String!) {
-    data: sensorData(id: $id, type: $type) {
-      id
-      name
-      location
+  query FindSensorData($type: String!) {
+    data: sensorsData(type: $type) {
+      name      
       metrics {
-        id
         timestamp
         value
         type        
@@ -25,6 +22,6 @@ export const Failure = ({ error }) => (
 )
 
 export const Success = ({ data }) => {
-  return <Graph sensorData={data}></Graph>
+  return <Graph sensorsData={data}></Graph>
   // return <div>{JSON.stringify(data)}</div>
 }
