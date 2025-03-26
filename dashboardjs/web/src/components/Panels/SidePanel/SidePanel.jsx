@@ -1,11 +1,15 @@
 import { Link, routes, navigate } from '@redwoodjs/router'
 
+
+
 const SidePanel = () => {
   return (
     <div className="fixed left-0 h-full w-64 bg-white border-r border-gray-200 p-6">
       <div className="space-y-8">
         <div>
-          <h1 className="text-xl font-semibold mb-6">Ahupuaʻa Health</h1>
+          <Link to={routes.home()}>
+            <h1 className="text-xl font-semibold mb-6">Ahupuaʻa Health</h1>
+          </Link>
           <div className="space-y-4">
             <Link to={routes.water()}>
               <button className='border border-gray-200 drop-shadow-sm w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
