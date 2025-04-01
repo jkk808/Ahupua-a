@@ -16,6 +16,21 @@ export const metricsByType = ({ type }) => {
   })
 }
 
+export const metricsMostRecent = async () => {
+  const latest = await db.metric.findFirst({
+    orderBy: {timestamp: 'desc'}
+  })
+
+  console.log(latest.timestamp)
+
+  // console.log(db.metric.findMany({
+  //   where: {timestamp: latest.timestamp}
+  // }))
+  
+  return db.metric.findMany({
+    where: {timestamp: latest.timestamp}
+  })
+}
 
 export const createMetric = ({ input }) => {
   return db.metric.create({
