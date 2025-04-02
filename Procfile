@@ -1,0 +1,1 @@
+web: yarn rw build && yarn rw serve
