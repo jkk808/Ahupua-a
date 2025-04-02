@@ -12,7 +12,6 @@ export const schema = gql`
     metrics: [Metric!]! @requireAuth
     metric(id: Int!): Metric @requireAuth
     metricsByType(type: String!): [Metric!]! @requireAuth
-    metricsMostRecent: [Metric!]! @requireAuth
   }
 
   input CreateMetricInput {
