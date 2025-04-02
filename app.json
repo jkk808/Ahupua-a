@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "dokku": {
+      "predeploy": "yarn rw build --verbose && yarn rw prisma migrate deploy && yarn rw data-migrate up"
+    }
+  }
+}
