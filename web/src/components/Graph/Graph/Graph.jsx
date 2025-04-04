@@ -6,7 +6,7 @@ function formatTitle(dataType) {
   switch (dataType) {
     case 'tds':
       return "Turbidity"
-    case 'ntu': 
+    case 'ntu':
       return "Conductivity"
     case 'temp':
       return "Temperature"
@@ -57,7 +57,7 @@ const Graph = ({ sensorsData }) => {
   }
 
   return (
-    <>      
+    <>
     <div className='w-[600px] h-[300px]'>
       <Line data={chartData} options={chartOptions}/>
     </div>

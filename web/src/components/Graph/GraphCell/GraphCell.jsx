@@ -3,15 +3,27 @@ import Graph from "../Graph/Graph"
 export const QUERY = gql`
   query FindSensorData($type: String!) {
     data: sensorsData(type: $type) {
-      name      
+      name
       metrics {
         timestamp
         value
-        type        
+        type
       }
     }
   }
 `
+
+const sortData = (data) => {
+  return data.map((sensor) => {
+    // need to clone since Apollo makes query data read-only
+    const sortedMetrics = [...sensor.metrics].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+    return {
+      ...sensor,
+      metrics: sortedMetrics
+    }
+  })
+}
 
 export const Loading = () => <div>Loading...</div>
 
@@ -22,6 +34,6 @@ export const Failure = ({ error }) => (
 )
 
 export const Success = ({ data }) => {
-  return <Graph sensorsData={data}></Graph>
-  // return <div>{JSON.stringify(data)}</div>
+  return <Graph sensorsData={sortData(data)}></Graph>
+  // return <div>{JSON.stringify(sortData(data))}</div>
 }
