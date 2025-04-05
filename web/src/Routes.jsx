@@ -22,6 +22,7 @@ const Routes = () => {
         <Route path="/sensors/{id:Int}/edit" page={SensorEditSensorPage} name="editSensor" />
         <Route path="/sensors/{id:Int}" page={SensorSensorPage} name="sensor" />
         <Route path="/sensors" page={SensorSensorsPage} name="sensors" />
+        <Route path="/map" page={MapPage} name="map" />
       </Set>
       <Route notfound page={NotFoundPage} />
     </Router>
