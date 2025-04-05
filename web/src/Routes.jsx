@@ -16,6 +16,7 @@ const Routes = () => {
   return (
     <Router>
       <Set wrap={MainPanelLayout} title="Sensors" titleTo="sensors" buttonLabel="New Sensor" buttonTo="newSensor">
+        <Route path="/soil" page={SoilPage} name="soil" />
         <Route path="/water" page={WaterPage} name="water" />
         <Route path="/" page={HomePage} name="home" />
         <Route path="/sensors/new" page={SensorNewSensorPage} name="newSensor" />

@@ -6,6 +6,7 @@ const SidePanel = () => {
   return (
     <div className="fixed left-0 h-full w-64 bg-white border-r border-gray-200 p-6">
 
+        {/* holds the links to different pages for water and soil */}
         <HealthScoresCell></HealthScoresCell>
 
         <div className="space-y-4 pt-4">
