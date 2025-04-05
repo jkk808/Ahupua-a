@@ -6,7 +6,33 @@ import ahupuaaData from './data/Ahupuaa.json'
 
 const Map = () => {
   const mapRef = useRef(null);
+  const geoJSONRef = useRef(null);
   const center = [21.4389, -158];
+
+  const zoomToFeature = (e) => {
+    const map = mapRef.current;
+    if (map) {
+      map.fitBounds(e.target.getBounds());
+    }
+  }
+
+  const highlightFeature = (e) => {
+    const layer = e.target;
+    layer.setStyle({
+      weight: 5,
+      color: '#228B22',
+      dashArray: '',
+      fillOpacity: 0.7
+    });
+
+    layer.bringToFront();
+  }
+
+  const resetHighlight = (e) => {
+    const geoJSON = geoJSONRef.current;
+    geoJSON.resetStyle(e.target);
+
+  }
 
   return (
     <MapContainer
@@ -33,6 +59,7 @@ const Map = () => {
         <LayersControl.Overlay name="Ahupuaa" checked>
           <FeatureGroup>
             <GeoJSON
+              ref={geoJSONRef}
               data={ahupuaaData}
               style={{
                 weight: 2,
@@ -45,6 +72,13 @@ const Map = () => {
                     <h3>${feature.properties.ahupuaa}</h3>
                   </div>`
                 );
+
+                layer.on({
+                  click: zoomToFeature,
+                  mouseover: highlightFeature,
+                  mouseout: resetHighlight
+                }
+                )
               }}
             />
           </FeatureGroup>
