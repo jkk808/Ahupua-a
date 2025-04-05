@@ -18,6 +18,11 @@ const SidePanel = () => {
             All Sensors
           </button>
           <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <Link to={routes.map()}>
+            Map
+            </Link>
+          </button>
+          <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
             Export Data
           </button>
           <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
