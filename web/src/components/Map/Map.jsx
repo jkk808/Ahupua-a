@@ -22,7 +22,7 @@ const Map = () => {
       weight: 5,
       color: '#228B22',
       dashArray: '',
-      fillOpacity: 0.7
+      fillOpacity: 0.4
     });
 
     layer.bringToFront();
