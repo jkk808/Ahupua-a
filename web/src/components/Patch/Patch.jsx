@@ -1,6 +1,6 @@
 import HealthScore from "../HealthScore/HealthScore"
 
-const Patch = ({ patch }) => {
+const Patch = ({ patch, scores }) => {
   return (
     <>
       <button className='border border-gray-200 drop-shadow-sm w-full h-64 text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
@@ -12,14 +12,14 @@ const Patch = ({ patch }) => {
             <h2>
               Soil Health
             </h2>
-            <HealthScore score={0.6}></HealthScore>
+            <HealthScore score={scores.soil}></HealthScore>
           </div>
 
           <div>
             <h2>
               Water Health
             </h2>
-            <HealthScore score={0.9}></HealthScore>
+            <HealthScore score={scores.water}></HealthScore>
           </div>
         </div>
       </button>

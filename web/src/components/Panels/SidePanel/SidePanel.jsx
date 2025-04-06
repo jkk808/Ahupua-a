@@ -36,32 +36,6 @@ const SidePanel = () => {
               <HealthScore score={0.6}></HealthScore>
             </div> */}
 
-            <button className='border border-gray-200 drop-shadow-sm w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
-
-              <Link to={routes.alerts()}>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">
-                    Anomaly Detection
-                  </h3>
-
-                <div className='text-orange-500'>
-                  4 Anomalies
-                </div>
-              </Link>
-            </button>
-
-            <button className='border border-gray-200 drop-shadow-sm w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
-
-              <Link to={routes.sensorHealth()}>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">
-                    Sensors Status
-                  </h3>
-
-                <div className='text-green-600'>
-                  Good
-                </div>
-              </Link>
-            </button>
-
           <br></br>
 
         <Link to={routes.home()}>
@@ -97,6 +71,32 @@ const SidePanel = () => {
             Map
           </button>
         </Link>
+
+        <button className='border border-gray-200 drop-shadow-sm w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
+
+              <Link to={routes.alerts()}>
+                  <h3 className="text-sm font-medium text-gray-500 mb-2">
+                    Anomaly Detection
+                  </h3>
+
+                <div className='text-orange-500'>
+                  4 Anomalies
+                </div>
+              </Link>
+            </button>
+
+            <button className='border border-gray-200 drop-shadow-sm w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
+
+              <Link to={routes.sensorHealth()}>
+                  <h3 className="text-sm font-medium text-gray-500 mb-2">
+                    Sensors Status
+                  </h3>
+
+                <div className='text-green-600'>
+                  Good
+                </div>
+              </Link>
+            </button>
 
         {/* <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
             Export Data
