@@ -4,6 +4,7 @@ import Patch from 'src/components/Patch/Patch'
 import { useState } from 'react'
 import PatchButton from 'src/components/PatchButton/PatchButton'
 import HealthScore from 'src/components/HealthScore/HealthScore'
+import AlertDot from 'src/components/Buttons/AlertDot'
 
 const patches = [
   { id: 'patch-1', location: 'top-bed' },
@@ -28,14 +29,40 @@ const SidePanel = () => {
           <HealthScore score={0.9}></HealthScore>
         </div>
 
-        <div className="w-full rounded-lg border border-gray-200 p-2 text-left drop-shadow-sm transition-colors hover:bg-gray-50">
-          <h3 className="mb-2 text-sm font-medium text-gray-500">
-            Overall Soil Health
-          </h3>
-          <HealthScore score={0.6}></HealthScore>
-        </div>
+            {/* <div className='border border-gray-200 drop-shadow-sm w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
+              <h3 className="text-sm font-medium text-gray-500 mb-2">
+              Overall Soil Health
+              </h3>
+              <HealthScore score={0.6}></HealthScore>
+            </div> */}
 
-        <br></br>
+            <button className='border border-gray-200 drop-shadow-sm w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
+
+              <Link to={routes.alerts()}>
+                  <h3 className="text-sm font-medium text-gray-500 mb-2">
+                    Anomaly Detection
+                  </h3>
+
+                <div className='text-orange-500'>
+                  4 Anomalies
+                </div>
+              </Link>
+            </button>
+
+            <button className='border border-gray-200 drop-shadow-sm w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
+
+              <Link to={routes.sensorHealth()}>
+                  <h3 className="text-sm font-medium text-gray-500 mb-2">
+                    Sensors Status
+                  </h3>
+
+                <div className='text-green-600'>
+                  Good
+                </div>
+              </Link>
+            </button>
+
+          <br></br>
 
         <Link to={routes.home()}>
           <button
@@ -46,18 +73,18 @@ const SidePanel = () => {
           </button>
         </Link>
 
-        {open && (
-          <div className="mt-2 w-full origin-top-right">
-            {patches.map((patch) => (
-              <Link
-                to={routes.patch({ location: patch.location })}
-                className="block rounded border border-gray-200 px-4 py-2 text-sm hover:bg-gray-100"
-              >
-                {patch.location}
-              </Link>
-            ))}
-          </div>
-        )}
+          {open && (
+            <div className="origin-top-right mt-2 w-full">
+              {patches.map((patch) => (
+                <Link
+                  to={routes.patch({ location: patch.location })}
+                  className="block px-4 py-2 border border-gray-200 rounded hover:bg-gray-100 text-sm"
+                >
+                  {patch.location}
+                </Link>
+              ))}
+            </div>
+          )}
 
         <Link to={routes.huliʻia()}>
           <button className="mt-4 w-full rounded-lg border border-gray-200 px-4 py-3 text-center drop-shadow-sm transition-colors hover:bg-gray-50">
