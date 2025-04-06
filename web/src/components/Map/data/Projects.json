@@ -1,56 +1,160 @@
 {
-  "projects": [
+  "ahupuaas": [
     {
-      "id": 0,
-      "name": "Nation of Hawaii",
-      "zoom": 18,
-      "polygon": {
-        "type": "Feature",
-        "geometry": {
-          "type": "Polygon",
-          "coordinates": [[
-            [-157.746865, 21.340669],
-            [-157.744865, 21.340669],
-            [-157.744865, 21.338669],
-            [-157.746865, 21.338669],
-            [-157.746865, 21.340669]
-          ]]
-        },
-        "properties": {
-          "name": "Nation of Hawaii"
-        }
-      },
-      "patches": [
+      "name": "Waimānalo",
+      "projects": [
         {
           "id": 0,
-          "name": "Kalo Patch",
-          "sensors": [
+          "name": "Nation of Hawaii",
+          "zoom": 18,
+          "polygon": {
+            "type": "Feature",
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [[
+                [-157.746865, 21.340669],
+                [-157.744865, 21.340669],
+                [-157.744865, 21.338669],
+                [-157.746865, 21.338669],
+                [-157.746865, 21.340669]
+              ]]
+            },
+            "properties": {
+              "name": "Nation of Hawaii"
+            }
+          },
+          "plots": [
             {
               "id": 0,
-              "name": "Sensor 1",
-              "latitude": 21.339669,
-              "longitude": -157.745865,
+              "name": "Kalo Patch",
+              "polygon": {
+                "type": "Feature",
+                "geometry": {
+                  "type": "Polygon",
+                  "coordinates": [[
+                    [-157.746365, 21.340169],
+                    [-157.745365, 21.340169],
+                    [-157.745365, 21.339169],
+                    [-157.746365, 21.339169],
+                    [-157.746365, 21.340169]
+                  ]]
+                },
+                "properties": {
+                  "name": "Kalo Patch"
+                }
+              },
+              "sensors": [
+                {
+                  "id": 0,
+                  "name": "Sensor 1",
+                  "latitude": 21.339669,
+                  "longitude": -157.745865,
+                  "data": [
+                    {
+                      "timestamp": "2023-10-01T00:00:00Z",
+                      "value": 25.4
+                    },
+                    {
+                      "timestamp": "2023-10-02T00:00:00Z",
+                      "value": 26.1
+                    }
+                  ],
+                  "metadata": {
+                    "unit": "cm",
+                    "description": "Soil moisture level"
+                  }
+                }
+              ]
+            }
+          ],
+          "sensors": [
+            {
+              "id": 2,
+              "name": "Project Sensor 1",
+              "latitude": 21.339869,
+              "longitude": -157.745965,
               "data": [
                 {
                   "timestamp": "2023-10-01T00:00:00Z",
-                  "value": 25.4
-                },
-                {
-                  "timestamp": "2023-10-02T00:00:00Z",
-                  "value": 26.1
+                  "value": 28.4
                 }
               ],
               "metadata": {
                 "unit": "cm",
-                "description": "Soil moisture level"
+                "description": "Project-level sensor"
               }
             }
-          ],
-          "metadata": {
-            "description": "A patch of land for growing kalo (taro).",
-            "area": 1000,
-            "soilType": "Loamy"
-          }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Kailua",
+      "projects": [
+        {
+          "id": 1,
+          "name": "Kailua Project",
+          "zoom": 18,
+          "polygon": {
+            "type": "Feature",
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [[
+                [-157.739865, 21.342669],
+                [-157.737865, 21.342669],
+                [-157.737865, 21.340669],
+                [-157.739865, 21.340669],
+                [-157.739865, 21.342669]
+              ]]
+            },
+            "properties": {
+              "name": "Kailua Project"
+            }
+          },
+          "plots": [
+            {
+              "id": 1,
+              "name": "Test Plot",
+              "polygon": {
+                "type": "Feature",
+                "geometry": {
+                  "type": "Polygon",
+                  "coordinates": [[
+                    [-157.739365, 21.342169],
+                    [-157.738365, 21.342169],
+                    [-157.738365, 21.341169],
+                    [-157.739365, 21.341169],
+                    [-157.739365, 21.342169]
+                  ]]
+                },
+                "properties": {
+                  "name": "Test Plot"
+                }
+              },
+              "sensors": [
+                {
+                  "id": 1,
+                  "name": "Sensor 2",
+                  "latitude": 21.341669,
+                  "longitude": -157.738865,
+                  "data": [
+                    {
+                      "timestamp": "2023-10-01T00:00:00Z",
+                      "value": 28.3
+                    },
+                    {
+                      "timestamp": "2023-10-02T00:00:00Z",
+                      "value": 27.9
+                    }
+                  ],
+                  "metadata": {
+                    "unit": "cm",
+                    "description": "Soil moisture level"
+                  }
+                }
+              ]
+            }
+          ]
         }
       ]
     }
