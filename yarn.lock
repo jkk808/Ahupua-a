@@ -15969,6 +15969,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"leaflet-draw@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "leaflet-draw@npm:1.0.4"
+  checksum: 10c0/9e700b7e5e7d70c0f9d66efe2fec282f635eff63699e5f2f4eb733b140188058cc7cb2a5d3c6889c300958ec9e415fd5c0a02a08db0e1fc13a063d4710cff004
+  languageName: node
+  linkType: hard
+
 "leaflet@npm:^1.9.4":
   version: 1.9.4
   resolution: "leaflet@npm:1.9.4"
@@ -16127,6 +16134,13 @@ __metadata:
   peerDependencies:
     lodash: 4.x
   checksum: 10c0/02881ae6e595245badbc29f4b4bc57f6fbab45ed5d7117c269b9a3c5efa57726670028074c989bd8b0a587211fa6d9447ac6124fb9e887c0571b307e1746bac8
+  languageName: node
+  linkType: hard
+
+"lodash-es@npm:^4.17.15":
+  version: 4.17.21
+  resolution: "lodash-es@npm:4.17.21"
+  checksum: 10c0/fb407355f7e6cd523a9383e76e6b455321f0f153a6c9625e21a8827d10c54c2a2341bd2ae8d034358b60e07325e1330c14c224ff582d04612a46a4f0479ff2f2
   languageName: node
   linkType: hard
 
@@ -18883,6 +18897,22 @@ __metadata:
   version: 18.3.1
   resolution: "react-is@npm:18.3.1"
   checksum: 10c0/f2f1e60010c683479e74c63f96b09fb41603527cd131a9959e2aee1e5a8b0caf270b365e5ca77d4a6b18aae659b60a86150bb3979073528877029b35aecd2072
+  languageName: node
+  linkType: hard
+
+"react-leaflet-draw@npm:^0.20.6":
+  version: 0.20.6
+  resolution: "react-leaflet-draw@npm:0.20.6"
+  dependencies:
+    fast-deep-equal: "npm:^3.1.3"
+    lodash-es: "npm:^4.17.15"
+  peerDependencies:
+    leaflet: ^1.8.0
+    leaflet-draw: ^1.0.4
+    prop-types: ^15.5.2
+    react: ^18.0.0
+    react-leaflet: ^4.0.0
+  checksum: 10c0/1b55ea457307ba8a78c13c6cb9be53d52f350b2b22373edb44b053b85191cc6b90ffd634e269e9ae9c632443f7401f9250faeba18d7d2bbc4473f53d4e82d7a7
   languageName: node
   linkType: hard
 
@@ -22339,11 +22369,13 @@ __metadata:
     autoprefixer: "npm:^10.4.21"
     humanize-string: "npm:2.1.0"
     leaflet: "npm:^1.9.4"
+    leaflet-draw: "npm:^1.0.4"
     postcss: "npm:^8.5.3"
     postcss-loader: "npm:^8.1.1"
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
     react-leaflet: "npm:4"
+    react-leaflet-draw: "npm:^0.20.6"
     tailwindcss: "npm:^3.4.17"
   languageName: unknown
   linkType: soft

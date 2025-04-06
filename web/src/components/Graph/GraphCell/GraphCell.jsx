@@ -4,6 +4,7 @@ export const QUERY = gql`
   query FindSensorData($type: String!) {
     data: sensorsData(type: $type) {
       name
+      location
       metrics {
         timestamp
         value

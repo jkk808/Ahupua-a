@@ -64,7 +64,6 @@ const TopPanel = () => {
                 MOON PHASE
               </div>
               <div className="text-md font-semibold">
-                Hoku
                 <div>{phase}</div>
                 <div> {phaseEmoji}</div>
               </div>

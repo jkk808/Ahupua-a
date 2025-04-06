@@ -3,7 +3,7 @@ import Map from 'src/components/Map/Map';
 
 const MapPage = () => {
   return (
-    <div className='@container'>
+    <div className='@container h-full'>
       <Suspense fallback={<div>Loading map...</div>}>
         <Map />
       </Suspense>

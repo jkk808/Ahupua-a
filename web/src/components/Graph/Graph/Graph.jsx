@@ -6,10 +6,16 @@ function formatTitle(dataType) {
   switch (dataType) {
     case 'ntu':
       return "Turbidity"
-    case 'tds':
-      return "Total Dissolved Solids"
+    case 'w_ph':
+      return "Water pH"
     case 's_ph':
-      return "Soil pH / Moisture %"
+      return "Soil pH"
+    case 's_moi':
+      return "Soil Moisture"
+    case 'cur':
+      return "Current"
+    case 'volt':
+      return "Voltage"
     default:
       return "Unknown"
   }
@@ -34,13 +40,13 @@ const Graph = ({ sensorsData }) => {
 
   const chartData = {
     datasets: sensorsData.map((sensor, index) => ({
-      label: sensor.name, // Sensor name as dataset label
+      label: sensor.location, // Sensor name as dataset label
       data: sensor.metrics.map((metric) => ({
         x: formatTime(metric.timestamp), // Chart.js auto-parses this timestamp
         y: metric.value,
       })),
-      borderColor: ["red", "blue"][index], // Assign colors dynamically
-      backgroundColor: ["rgba(255, 0, 0, 0.5)", "rgba(0, 0, 255, 0.5)"][index],
+      borderColor: ["green", "blue", "orange"][index], // Assign colors dynamically
+      backgroundColor: ["rgba(0, 128, 0, 0.5)", "rgba(0, 0, 255, 0.5)", "rgba(255, 165, 0, 0.5)"][index],
       fill: false,
     })),
   };

@@ -10,13 +10,20 @@ const determineGrade = (score) => {
   if (score >= 0.3) return "POOR";
 }
 
+const determineColor = (score) => {
+  if (score >= 0.7) return 'rgb(20, 174, 61)';
+  if (score <= 0.6) return 'rgb(255, 205, 86)';
+  // if (score >= 0.5) return "FAIR";
+  // if (score >= 0.3) return "POOR";
+}
+
 const HealthScore = ({ score }) => {
   const grade = determineGrade(score)
   const chartData = {
     datasets: [{
       label: '',
       data: [score, 1 - score],
-      backgroundColor: ['rgb(20, 174, 61)', 'rgb(211, 211, 211)'],
+      backgroundColor: [determineColor(score), 'rgb(211, 211, 211)'],
     }]
   }
   const chartOptions = {
