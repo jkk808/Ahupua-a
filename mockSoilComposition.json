@@ -38,5 +38,30 @@
     "name": "Aluminum",
     "value": "12",
     "description": ""
+  },
+  {
+    "name": "Nitrate",
+    "value": "2.0",
+    "description": ""
+  },
+  {
+    "name": "Nitrite",
+    "value": "1.12",
+    "description": ""
+  },
+  {
+    "name": "Boron",
+    "value": "2",
+    "description": ""
+  },
+  {
+    "name": "Phosphorus",
+    "value": "1.02",
+    "description": ""
+  },
+  {
+    "name": "Ammonium",
+    "value": "12",
+    "description": ""
   }
 ]
