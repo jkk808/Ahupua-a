@@ -4,12 +4,12 @@ import { Bar, Doughnut, Line } from 'react-chartjs-2';
 
 function formatTitle(dataType) {
   switch (dataType) {
-    case 'tds':
-      return "Turbidity"
     case 'ntu':
-      return "Conductivity"
-    case 'temp':
-      return "Temperature"
+      return "Turbidity"
+    case 'tds':
+      return "Total Dissolved Solids"
+    case 's_ph':
+      return "Soil pH / Moisture %"
     default:
       return "Unknown"
   }
