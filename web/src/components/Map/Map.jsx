@@ -13,13 +13,14 @@ import {
   CircleMarker,
 } from 'react-leaflet'
 import { LatLng } from 'leaflet'
+import { EditControl } from "react-leaflet-draw"
 import 'leaflet/dist/leaflet.css'
+import 'leaflet-draw/dist/leaflet.draw.css'
 import './Map.css'
 import ahupuaaData from './data/Ahupuaa.json'
 import zonesData from './data/Zones.json'
 import ResetViewControl from '../ResetViewControl/ResetViewControl'
 import { set } from '@redwoodjs/forms'
-import * as turf from 'turf'
 
 const Info = ({ position, selected }) => {
   // NOTE: This is a hardcoded value for the number of sensors
@@ -94,17 +95,6 @@ const Map = () => {
     setSelected(null)
   }
 
-  const centerMarkers = useMemo(() => {
-    return ahupuaaData.features.map((feature, index) => {
-      const center = turf.centroid(feature).geometry.coordinates.reverse()
-      return {
-        id: index,
-        center,
-        name: feature.properties?.ahupuaa || `Zone ${index + 1}`,
-      }
-    })
-  }, [])
-
   const handleMarkerClick = (zone) => {
     const map = mapRef.current
     if (map) {
@@ -124,6 +114,14 @@ const Map = () => {
       attributionControl={false}
       style={{ height: '100%', width: '100%' }}
     >
+      <FeatureGroup>
+        <EditControl
+          position='topright'
+          draw={{
+            rectangle: false
+          }}
+        />
+      </FeatureGroup>
       <ResetViewControl
         center={center}
         zoom={zoom}

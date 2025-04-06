@@ -16,9 +16,11 @@
     "@redwoodjs/web": "8.5.0",
     "humanize-string": "2.1.0",
     "leaflet": "^1.9.4",
+    "leaflet-draw": "^1.0.4",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-leaflet": "4"
+    "react-leaflet": "4",
+    "react-leaflet-draw": "^0.20.6"
   },
   "devDependencies": {
     "@redwoodjs/vite": "8.5.0",
