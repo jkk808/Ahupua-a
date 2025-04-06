@@ -3,6 +3,7 @@ import { useParams } from '@redwoodjs/router'
 import PatchCell from 'src/components/PatchCell/PatchCell'
 import { useState } from 'react'
 import GraphCell from 'src/components/Graph/GraphCell'
+import SoilComposition from 'src/components/SoilComposition/SoilComposition'
 
 const PatchPage = () => {
   const { id } = useParams()
@@ -42,7 +43,9 @@ const PatchPage = () => {
           {activeTab === 'Soil' &&
             <GraphCell key={activeTab} type='s_ph'></GraphCell>
           }
-          {activeTab === 'Soil Composition' && <p>Soil composition details will go here.</p>}
+          {activeTab === 'Soil Composition' &&
+          <SoilComposition></SoilComposition>
+          }
         </div>
       </div>
     </>

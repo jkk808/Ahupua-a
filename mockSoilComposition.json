@@ -1,20 +1,42 @@
 [
   {
-    "zinc": 45,
-    "sulfur": 4,
-    "calcium": 3,
-    "magnesium": 11
+    "name": "Zinc",
+    "value": "0.04",
+    "description": ""
   },
   {
-    "zinc": 5,
-    "sulfur": 14,
-    "calcium": 23,
-    "magnesium": 13
+    "name": "Sulfur",
+    "value": "56",
+    "description": ""
   },
   {
-    "zinc": 4,
-    "sulfur": 42,
-    "calcium": 33,
-    "magnesium": 1
+    "name": "Bacteria Name",
+    "value": "56",
+    "description": ""
+  },
+  {
+    "name": "Magnesium",
+    "value": "3.4",
+    "description": ""
+  },
+  {
+    "name": "Copper",
+    "value": "5.4",
+    "description": ""
+  },
+  {
+    "name": "Invasive Plant name",
+    "value": "1",
+    "description": ""
+  },
+  {
+    "name": "Iron",
+    "value": "12",
+    "description": ""
+  },
+  {
+    "name": "Aluminum",
+    "value": "12",
+    "description": ""
   }
 ]
