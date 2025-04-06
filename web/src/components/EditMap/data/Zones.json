@@ -1,0 +1,11 @@
+{
+  "zones": [
+    {
+      "id": 0,
+      "name": "Nation of Hawaii",
+      "latitude": 21.339669,
+      "longitude": -157.745865,
+      "zoom": 18
+    }
+  ]
+}
