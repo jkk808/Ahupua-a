@@ -96,12 +96,6 @@ const Map = () => {
       return { type: "FeatureCollection", features: [] };
     }
 
-    // Check if the ahupuaa has any projects
-    if (!selectedAhupuaa.projects?.length) {
-      console.log('Selected ahupuaa has no projects:', selected);
-      return { type: "FeatureCollection", features: [] };
-    }
-
     const features = selectedAhupuaa.projects
       .filter(project => project.polygon && project.polygon.geometry)
       .map(project => ({
@@ -115,11 +109,7 @@ const Map = () => {
         }
       }));
 
-    console.log('Generated project features:', {
-      ahupuaa: selected,
-      projectCount: features.length,
-      features
-    });
+    console.log('Generated project features:', features);
 
     return {
       type: "FeatureCollection",
@@ -233,22 +223,31 @@ const Map = () => {
   }, [activeLayer, isZooming]);
 
   const handleAhupuaaClick = (feature, layer, e) => {
+    if (activeLayer !== 'ahupuaa') {
+      console.log('Ignoring ahupuaa click - wrong layer:', activeLayer);
+      return;
+    }
+
     L.DomEvent.stopPropagation(e.originalEvent);
 
     const ahupuaaName = feature.properties.ahupuaa || feature.properties.name;
-    console.log('Starting ahupuaa selection:', {
-      name: ahupuaaName,
-      currentLayer: activeLayer,
-      currentlySelected: selected,
-      willResetState: selected !== null
+    console.log('Ahupuaa click:', {
+      clicked: ahupuaaName,
+      currentlySelected: selected
     });
 
-    const ahupuaaData = zonesData.ahupuaas.find(a => a.name === ahupuaaName);
-    const hasProjects = ahupuaaData?.projects?.length > 0;
+    // If clicking a different ahupuaa than the selected one, reset to initial state first
+    if (selected && ahupuaaName !== selected) {
+      console.log('Clicking different ahupuaa, resetting state');
+      resetToInitialState();
+      return;
+    }
 
-    console.log('Ahupuaa data check:', {
+    const ahupuaaData = zonesData.ahupuaas.find(a => a.name === ahupuaaName);
+    const hasProjects = ahupuaaData && ahupuaaData.projects?.length > 0;
+
+    console.log('Ahupuaa data:', {
       name: ahupuaaName,
-      found: !!ahupuaaData,
       hasProjects,
       projectCount: ahupuaaData?.projects?.length || 0
     });
@@ -256,41 +255,37 @@ const Map = () => {
     const map = mapRef.current;
     if (map) {
       setIsZooming(true);
+      setSelected(ahupuaaName);
 
-      // If we're selecting a different ahupuaa, reset state first
-      if (selected) {
-        console.log('Resetting state for new ahupuaa:', {
-          previous: selected,
-          new: ahupuaaName
-        });
-        setSelectedProject(null);
-        setSelected(null);
-        setActiveLayer('ahupuaa');
+      // Disable click events for this specific layer
+      layer.off('click');
+      layer.setStyle({
+        interactive: false,
+        pointerEvents: 'none'
+      });
+      if (layer._path) {
+        layer._path.classList.add('pointer-events-none');
       }
 
       // Get center of the ahupuaa polygon
       const center = layer.getBounds().getCenter();
-      console.log('Zooming to new ahupuaa:', {
+      console.log('Zooming to ahupuaa:', {
         name: ahupuaaName,
         center,
-        hasProjects,
-        willShowProjects: hasProjects
+        hasProjects
       });
 
       // Zoom to the ahupuaa center
       map.setView(center, 14);
 
-      // After zoom completes, set the new selection and layer
+      // Only switch to projects layer if the ahupuaa has projects
       setTimeout(() => {
-        console.log('Zoom complete, updating state:', {
-          name: ahupuaaName,
-          willSetActiveLayer: hasProjects,
-          newLayer: hasProjects ? 'projects' : 'ahupuaa'
-        });
-        setSelected(ahupuaaName);
-        // Only switch to projects layer if the ahupuaa has projects
         if (hasProjects) {
+          console.log('Zoom complete, switching to projects layer');
           setActiveLayer('projects');
+        } else {
+          console.log('Zoom complete, staying in ahupuaa layer (no projects)');
+          // Stay in ahupuaa layer but keep the selected state
         }
         setIsZooming(false);
       }, 1000);
@@ -407,8 +402,8 @@ const Map = () => {
             ref={geoJSONRef}
             data={ahupuaaData}
             style={(feature) => {
-              // Allow interaction with any ahupuaa when in ahupuaa layer
-              const isActive = !isZooming;
+              // Only disable interaction for the selected ahupuaa
+              const isActive = !isZooming && (!selected || (selected && feature?.properties?.ahupuaa !== selected));
               return {
                 weight: 2,
                 color: '#228B22',
@@ -425,8 +420,8 @@ const Map = () => {
               // First, remove any existing event listeners
               layer.off();
 
-              // Add click handler for all ahupuaa
-              if (!isZooming) {
+              // Add click handler if this isn't the currently selected ahupuaa
+              if (!isZooming && (!selected || feature.properties.ahupuaa !== selected)) {
                 layer.on({
                   click: (e) => {
                     console.log('Ahupuaa interaction attempt:', {
@@ -435,28 +430,76 @@ const Map = () => {
                       activeLayer,
                       isZooming,
                       currentlySelected: selected,
+                      isCurrentlySelected: selected === feature.properties.ahupuaa,
                       willResetState: selected !== null
                     });
 
-                    if (isZooming) {
+                    if (isZooming || feature.properties.ahupuaa === selected) {
                       console.log('Blocking ahupuaa interaction:', {
-                        reason: 'zooming in progress',
+                        reason: isZooming ? 'zooming in progress' : 'this ahupuaa is already selected',
                         name: feature.properties.ahupuaa
                       });
                       return;
                     }
 
+                    // If we're selecting a different ahupuaa, reset state first
+                    if (selected) {
+                      console.log('Resetting state for new ahupuaa selection:', {
+                        previousAhupuaa: selected,
+                        newAhupuaa: feature.properties.ahupuaa
+                      });
+                      setSelectedProject(null);
+                      setSelected(null);
+                      setActiveLayer('ahupuaa');
+                    }
+
                     handleAhupuaaClick(feature, layer, e);
                   }
                 });
+              } else {
+                console.log('Skipping event handlers for ahupuaa:', {
+                  name: feature.properties.ahupuaa,
+                  reason: isZooming ? 'zooming in progress' :
+                         (selected === feature.properties.ahupuaa) ? 'this is the currently selected ahupuaa' :
+                         'unknown reason',
+                  activeLayer,
+                  selected
+                });
+              }
+
+              // Set initial style based on selection state
+              const isActive = !isZooming && (!selected || feature.properties.ahupuaa !== selected);
+              layer.setStyle({
+                interactive: isActive,
+                pointerEvents: isActive ? 'auto' : 'none'
+              });
+              if (!isActive && layer._path) {
+                layer._path.classList.add('pointer-events-none');
               }
             }}
             eventHandlers={{
               add: (e) => {
+                const layer = e.target;
                 console.log('Ahupuaa layer mount state:', {
                   selected,
                   activeLayer,
-                  isInteractive: !isZooming
+                  willDisableEvents: false
+                });
+
+                // Instead of disabling the whole layer, we'll handle interactivity per-feature
+                layer.eachLayer((l) => {
+                  const featureName = l.feature?.properties?.ahupuaa;
+                  if (featureName === selected) {
+                    console.log('Disabling selected ahupuaa:', featureName);
+                    l.off();
+                    l.setStyle({
+                      interactive: false,
+                      pointerEvents: 'none'
+                    });
+                    if (l._path) {
+                      l._path.classList.add('pointer-events-none');
+                    }
+                  }
                 });
               }
             }}
