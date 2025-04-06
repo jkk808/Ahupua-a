@@ -1,14 +1,14 @@
 import { render } from '@redwoodjs/testing/web'
 
-import LlmPage from './LlmPage'
+import PatchPage from './PatchPage'
 
 //   Improve this test with help from the Redwood Testing Doc:
 //   https://redwoodjs.com/docs/testing#testing-pages-layouts
 
-describe('LlmPage', () => {
+describe('PatchPage', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<LlmPage />)
+      render(<PatchPage />)
     }).not.toThrow()
   })
 })

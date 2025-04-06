@@ -15,11 +15,10 @@ import MainPanelLayout from './layouts/MainPanelsLayout/MainPanelsLayout'
 const Routes = () => {
   return (
     <Router>
-      <Route path="/terrace" page={TerracePage} name="terrace" />
       <Set wrap={MainPanelLayout} title="Sensors" titleTo="sensors" buttonLabel="New Sensor" buttonTo="newSensor">
-        <Route path="/llm" page={LlmPage} name="llm" />
-        <Route path="/soil" page={SoilPage} name="soil" />
-        <Route path="/water" page={WaterPage} name="water" />
+        <Route path="/patch/{id}" page={PatchPage} name="patch" />
+        {/* <Route path="/soil" page={SoilPage} name="soil" /> */}
+        {/* <Route path="/water" page={WaterPage} name="water" /> */}
         <Route path="/" page={HomePage} name="home" />
         <Route path="/sensors/new" page={SensorNewSensorPage} name="newSensor" />
         <Route path="/sensors/{id:Int}/edit" page={SensorEditSensorPage} name="editSensor" />

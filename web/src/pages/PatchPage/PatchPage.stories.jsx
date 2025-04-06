@@ -1,7 +1,7 @@
-import LlmPage from './LlmPage'
+import PatchPage from './PatchPage'
 
 const meta = {
-  component: LlmPage,
+  component: PatchPage,
 }
 
 export default meta

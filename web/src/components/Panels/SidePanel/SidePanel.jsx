@@ -4,6 +4,14 @@ import Patch from 'src/components/Patch/Patch'
 import { useState } from 'react'
 import PatchButton from 'src/components/PatchButton/PatchButton'
 
+const patches = [
+  { id: 'patch-1', name: 'Patch 1' },
+  { id: 'patch-2', name: 'Patch 2' },
+  { id: 'patch-3', name: 'Patch 3' },
+  { id: 'patch-4', name: 'Patch 4' },
+  // Add as many as you want
+]
+
 const SidePanel = () => {
   const [open, setOpen] = useState(false)
   const toggleDropdown = () => setOpen((prev) => !prev)
@@ -24,20 +32,18 @@ const SidePanel = () => {
 
           {open && (
             <div className="origin-top-right mt-2 w-full">
-              <PatchButton></PatchButton>
-              <PatchButton></PatchButton>
-              <PatchButton></PatchButton>
-              <PatchButton></PatchButton>
+              {patches.map((patch) => (
+                <Link
+                  key={patch.id}
+                  to={routes.patch({ id: patch.id })}
+                  className="block px-4 py-2 border border-gray-200 rounded hover:bg-gray-100 text-sm"
+                >
+                  {patch.name}
+                </Link>
+              ))}
             </div>
           )}
 
-          <div className=''>
-            <Link to={routes.llm()}>
-              <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
-                Recommendations
-              </button>
-            </Link>
-          </div>
           <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
             All Sensors
           </button>
