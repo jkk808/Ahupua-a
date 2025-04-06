@@ -1,0 +1,20 @@
+[
+  {
+    "zinc": 45,
+    "sulfur": 4,
+    "calcium": 3,
+    "magnesium": 11
+  },
+  {
+    "zinc": 5,
+    "sulfur": 14,
+    "calcium": 23,
+    "magnesium": 13
+  },
+  {
+    "zinc": 4,
+    "sulfur": 42,
+    "calcium": 33,
+    "magnesium": 1
+  }
+]
