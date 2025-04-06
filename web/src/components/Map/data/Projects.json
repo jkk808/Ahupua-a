@@ -1,0 +1,67 @@
+{
+  "projects": [
+    {
+      "id": 0,
+      "name": "Nation of Hawaii",
+      "latitude": 21.339669,
+      "longitude": -157.745865,
+      "zoom": 18,
+      "patches": [
+        {
+          "id": 0,
+          "name": "Kalo Patch",
+          "sensors": [
+            {
+              "id": 0,
+              "name": "Sensor 1",
+              "latitude": 21.339669,
+              "longitude": -157.745865,
+              "data": [
+                {
+                  "timestamp": "2023-10-01T00:00:00Z",
+                  "value": 25.4
+                },
+                {
+                  "timestamp": "2023-10-02T00:00:00Z",
+                  "value": 26.1
+                }
+
+              ],
+              "metadata": {
+                  "unit": "cm",
+                  "description": "Soil moisture level"
+                }
+            }
+          ],
+          "geojson": {
+            "type": "FeatureCollection",
+            "features": [
+              {
+                "type": "Feature",
+                "geometry": {
+                  "type": "Polygon",
+                  "coordinates": [
+                    [
+                      [-157.745865, 21.339669],
+                      [-157.745865, 21.339669],
+                      [-157.745865, 21.339669],
+                      [-157.745865, 21.339669]
+                    ]
+                  ]
+                },
+                "properties": {
+                  "name": "Nation of Hawaii"
+                }
+              }
+            ]
+          },
+          "metadata": {
+            "description": "A patch of land for growing kalo (taro).",
+            "area": 1000,
+            "soilType": "Loamy"
+          }
+        }
+      ]
+    }
+  ]
+}

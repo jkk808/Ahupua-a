@@ -18,7 +18,7 @@ import 'leaflet/dist/leaflet.css'
 import 'leaflet-draw/dist/leaflet.draw.css'
 import './Map.css'
 import ahupuaaData from './data/Ahupuaa.json'
-import zonesData from './data/Zones.json'
+import zonesData from './data/Projects.json'
 import ResetViewControl from '../ResetViewControl/ResetViewControl'
 import { set } from '@redwoodjs/forms'
 
@@ -173,20 +173,20 @@ const Map = () => {
         <LayersControl.Overlay checked name="Zones">
           <LayerGroup>
               {
-                zonesData.zones.map((zone, index) => (
+                zonesData.projects.map((project, index) => (
                   <Marker
                     key={index}
                     color="green"
-                    position={[zone.latitude, zone.longitude]}
+                    position={[project.latitude, project.longitude]}
                     eventHandlers={{
-                      click: () => handleMarkerClick(zone),
+                      click: () => handleMarkerClick(project),
                       mouseover: (e) => e.target.openPopup(),
                     }}
                     >
                     <Popup
                     >
-                        <h3>{zone.name}</h3>
-                        <Link routes={routes.sensor({ id: zone.id })}>
+                        <h3>{project.name}</h3>
+                        <Link routes={routes.sensor({ id: project.id })}>
                           <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
                             View Sensor
                           </button>
