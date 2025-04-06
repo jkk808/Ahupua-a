@@ -19,7 +19,7 @@ export const schema = gql`
     sensors: [Sensor!]! @requireAuth
     sensorsData(type: String!): [Sensor!]! @requireAuth
     sensor(id: Int!): Sensor @requireAuth
-    sensorsDataByLocation(name: String!, type: String!): Sensor @requireAuth
+    sensorsDataByLocation(location: String!, type: String!): Sensor @requireAuth
   }
 
   input CreateSensorInput {

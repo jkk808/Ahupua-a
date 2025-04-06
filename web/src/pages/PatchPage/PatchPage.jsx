@@ -5,10 +5,8 @@ import { useState } from 'react'
 import GraphCell from 'src/components/Graph/GraphCell'
 import GraphPatchCell from 'src/components/GraphPatchCell/GraphPatchCell'
 
-
-
 const PatchPage = () => {
-  const { name } = useParams()
+  const { location } = useParams()
   const [activeTab, setActiveTab] = useState('Water')
 
   const tabs = ['Water', 'Soil', 'Soil Composition']
@@ -17,7 +15,7 @@ const PatchPage = () => {
     <>
       <Metadata title="Patch" description="Patch page" />
       <div>{name}</div>
-      <div className="p-6 max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         {/* Tabs */}
         <div className="flex space-x-4 mb-6 border-b">
           {tabs.map((tab) => (
@@ -37,21 +35,21 @@ const PatchPage = () => {
 
         {/* Content Area */}
         <div className="bg-white p-4 rounded shadow">
-          <h2 className="text-xl font-bold capitalize mb-4">{activeTab}</h2>
+          {/* <h2 className="text-xl font-bold capitalize mb-4">{activeTab}</h2> */}
 
           {/* Replace this with real data once your PatchCell is ready */}
           {activeTab === 'Water' && (
-            <div className='flex justify-center gap-{20px}'>
-              <GraphPatchCell key={activeTab} type='ntu' name={name}></GraphPatchCell>
-              <GraphPatchCell key={activeTab} type='w_ph' name={name}></GraphPatchCell>
+            <div className='justify-center space-y-20'>
+              <GraphPatchCell key={activeTab} type='ntu' location={location}></GraphPatchCell>
+              <GraphPatchCell key={activeTab} type='level' location={location}></GraphPatchCell>
             </div>
           )
           }
           {activeTab === 'Soil' &&
             (
-              <div className='flex justify-center gap-{20px}'>
-                <GraphPatchCell key={activeTab} type='s_ph' name={name}></GraphPatchCell>
-                <GraphPatchCell key={activeTab} type='s_moi' name={name}></GraphPatchCell>
+              <div className='justify-center space-y-20'>
+                <GraphPatchCell key={activeTab} type='s_ph' location={location}></GraphPatchCell>
+                <GraphPatchCell key={activeTab} type='s_moi' location={location}></GraphPatchCell>
               </div>
             )
           }

@@ -22,7 +22,11 @@ function formatTitle(dataType) {
     case 'tds':
       return "Total Dissolved Solids"
     case 's_ph':
-      return "Soil pH / Moisture %"
+      return "Soil pH"
+    case 's_moi':
+      return "Soil Moisture"
+    case 'level':
+      return "Water Level"
     default:
       return "Unknown"
   }
@@ -32,7 +36,7 @@ const Graph = ({ metrics }) => {
   const title = formatTitle(metrics[0].type)
 
   const chartData = {
-    labels: metrics.map((m) => new Date(m.timestamp)),
+    labels: metrics.map((m) => formatTime(new Date(m.timestamp))),
     datasets: [
       {
         data: metrics.map((m) => m.value),
@@ -61,7 +65,7 @@ const Graph = ({ metrics }) => {
 
   return (
     <>
-    <div className='w-[600px] h-[300px]'>
+    <div className='w-[800px] h-[400px]'>
       <Line data={chartData} options={chartOptions}/>
     </div>
     </>

@@ -4,10 +4,9 @@ import SensorsCell from 'src/components/Sensor/SensorsCell'
 import Patch from 'src/components/Patch/Patch'
 
 const patches = [
-  { id: 'patch-1', name: 'top bed' },
-  { id: 'patch-2', name: 'top-middle bed' },
-  { id: 'patch-3', name: 'middle-bottom bed' },
-  { id: 'patch-4', name: 'bottom bed' },
+  { id: 'patch-1', name: 'top-bed' },
+  { id: 'patch-2', name: 'mid-bed' },
+  { id: 'patch-4', name: 'bot-bed' },
   // Add as many as you want
 ]
 const HomePage = () => {
@@ -19,7 +18,6 @@ const HomePage = () => {
         <Patch patch={patches[0]}></Patch>
         <Patch patch={patches[1]}></Patch>
         <Patch patch={patches[2]}></Patch>
-        <Patch patch={patches[3]}></Patch>
       </div>
       {/*
            My default route is named `home`, link to me with:

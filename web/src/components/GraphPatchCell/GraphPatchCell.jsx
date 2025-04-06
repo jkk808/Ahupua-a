@@ -1,9 +1,10 @@
 import GraphPatch from 'src/components/GraphPatch/GraphPatch'
 
 export const QUERY = gql`
-  query FindDataFromAPatchQuery($type: String!, $name: String!) {
-    graphPatch: sensorsDataByLocation(name: $name, type: $type) {
+  query GetDataFromSensorBasedOnTypeQuery($type: String!, $location: String!) {
+    graphPatch: sensorsDataByLocation(location: $location, type: $type) {
       name
+      location
       metrics {
         timestamp
         value

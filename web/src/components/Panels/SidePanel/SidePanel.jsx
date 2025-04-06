@@ -6,10 +6,9 @@ import PatchButton from 'src/components/PatchButton/PatchButton'
 import HealthScore from 'src/components/HealthScore/HealthScore'
 
 const patches = [
-  { id: 'patch-1', name: 'top-bed' },
-  { id: 'patch-2', name: 'top-middle-bed' },
-  { id: 'patch-3', name: 'middle-bottom-bed' },
-  { id: 'patch-4', name: 'bottom-bed' },
+  { id: 'patch-1', location: 'top-bed' },
+  { id: 'patch-3', location: 'mid-bed' },
+  { id: 'patch-4', location: 'bot-bed' },
   // Add as many as you want
 ]
 
@@ -35,10 +34,10 @@ const SidePanel = () => {
             <div className="origin-top-right mt-2 w-full">
               {patches.map((patch) => (
                 <Link
-                  to={routes.patch({ name: patch.name })}
+                  to={routes.patch({ location: patch.location })}
                   className="block px-4 py-2 border border-gray-200 rounded hover:bg-gray-100 text-sm"
                 >
-                  {patch.name}
+                  {patch.location}
                 </Link>
               ))}
             </div>

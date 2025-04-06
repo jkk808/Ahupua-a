@@ -26,10 +26,10 @@ export const sensorsData =({ type }) => {
   });
 };
 
-export const sensorsDataByLocation = ({ name, type }) => {
+export const sensorsDataByLocation = ({ location, type }) => {
   return db.sensor.findFirst({
     where: {
-      name,
+      location,
       metrics: {
         some: { type }
       }
