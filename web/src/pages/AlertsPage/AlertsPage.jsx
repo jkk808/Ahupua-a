@@ -2,6 +2,9 @@ import { Link, routes } from '@redwoodjs/router'
 import { Metadata} from '@redwoodjs/web'
 import SensorsCell from 'src/components/Sensor/SensorsCell'
 import { TextAreaField } from '@redwoodjs/forms'
+import mockAlertData from '../../../../mockDataAlerts.json'
+
+console.log(mockAlertData)
 
 const AlertsPage = () => {
   return (
@@ -18,63 +21,26 @@ const AlertsPage = () => {
              <th>Name</th>
              <th>Type</th>
              <th>Location</th>
-             <th>Metric</th>
+             <th>Value</th>
+             <th>Unit</th>
              <th>Comments</th>
            </tr>
          </thead>
          <tbody>
-          <tr key="alert">
-            <td>
-              3:00pm
-            </td>
-            <td>
-              SS01-01
-            </td>
-            <td>
-              Water Temp
-            </td>
-            <td>
-              Lo'i 1
-            </td>
-            <td>
-              82
-            </td>
-            <td>
-              <textarea/>
-            </td>
-          </tr>
-           {/* {sensors.map((sensor) => (
-             <tr key={sensor.id}>
-               <td>{truncate(sensor.id)}</td>
-               <td>{truncate(sensor.name)}</td>
+           {mockAlertData.map((alert) => (
+             <tr key={alert.id}>
+               <td>{alert.date}</td>
+               <td>{alert.time}</td>
+               <td>{alert.name}</td>
+               <td>{alert.type}</td>
+               <td>{alert.location}</td>
+               <td>{alert.value}</td>
+               <td>{alert.unit}</td>
                <td>
-                 <nav className="rw-table-actions">
-                   <Link
-                     to={routes.sensor({ id: sensor.id })}
-                     title={'Show sensor ' + sensor.id + ' detail'}
-                     className="rw-button rw-button-small"
-                   >
-                     Show
-                   </Link>
-                   <Link
-                     to={routes.editSensor({ id: sensor.id })}
-                     title={'Edit sensor ' + sensor.id}
-                     className="rw-button rw-button-small rw-button-blue"
-                   >
-                     Edit
-                   </Link>
-                   <button
-                     type="button"
-                     title={'Delete sensor ' + sensor.id}
-                     className="rw-button rw-button-small rw-button-red"
-                     onClick={() => onDeleteClick(sensor.id)}
-                   >
-                     Delete
-                   </button>
-                 </nav>
-               </td>
+                  <textarea/>
+              </td>
              </tr>
-           ))} */}
+           ))}
          </tbody>
        </table>
      </div>

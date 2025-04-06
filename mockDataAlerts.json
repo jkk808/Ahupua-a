@@ -1,13 +1,50 @@
 [
-  // { "id": 1, "name": "John Doe", "age": 30 },
-  // { "id": 2, "name": "Jane Smith", "age": 25 }
-  // {}
+  {
+    "id": 1,
+    "date": "04/05/2025",
+    "time": "3:00 PM",
+    "name": "SS-01",
+    "type": "Water Temperature",
+    "location": "Lo'i 1",
+    "value": "70",
+    "unit": "F",
+    "severity": "Low",
+    "comments": ""
+  },
+  {
+    "id": 2,
+    "date": "04/03/2025",
+    "time": "11:00 PM",
+    "name": "SS-02",
+    "type": "Soil Moisture",
+    "location": "Lo'i 2",
+    "value": "8%",
+    "unit": "%",
+    "severity": "High",
+    "comments": ""
+  },
+  {
+    "id": 3,
+    "date": "04/03/2025",
+    "time": "4:23 AM",
+    "name": "SS-03",
+    "type": "Water Level",
+    "location": "Lo'i 7",
+    "value": "2",
+    "unit": "NTU",
+    "severity": "Low",
+    "comments": ""
+  },
+  {
+    "id": 34,
+    "date": "04/02/2025",
+    "time": "11:30 AM",
+    "name": "SS-05",
+    "type": "Flow Rate",
+    "location": "Lo'i 10",
+    "value": "5",
+    "unit": "g/s",
+    "severity": "Low",
+    "comments": ""
+  }
 ]
-
-date
-<th>Time</th>
-<th>Name</th>
-<th>Type</th>
-<th>Location</th>
-<th>Metric</th>
-<th>Comments</th>
