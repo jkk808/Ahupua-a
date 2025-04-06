@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo } from 'react'
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import { Link, routes, navigate } from '@redwoodjs/router'
 import { useQuery } from '@redwoodjs/web'
 import {
@@ -21,6 +21,30 @@ import ahupuaaData from './data/Ahupuaa.json'
 import zonesData from './data/Projects.json'
 import ResetViewControl from '../ResetViewControl/ResetViewControl'
 import { set } from '@redwoodjs/forms'
+
+// Import marker icons
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
+import markerIcon from 'leaflet/dist/images/marker-icon.png'
+import markerShadow from 'leaflet/dist/images/marker-shadow.png'
+
+// Fix for default marker icon
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
+
+// Create a custom icon for sensors
+const sensorIcon = new L.Icon({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
 
 const Info = ({ position, selected, selectedProject }) => {
   // NOTE: This is a hardcoded value for the number of sensors
@@ -73,8 +97,9 @@ const Map = () => {
     center: [21.4389, -158]
   };
 
-  const [selected, setSelected] = useState(initialState.selected)
-  const [selectedProject, setSelectedProject] = useState(initialState.selectedProject)
+  const [selected, setSelected] = useState(null);
+  const [lastSelectedAhupuaa, setLastSelectedAhupuaa] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(initialState.selectedProject);
   const [isZooming, setIsZooming] = useState(false);
   const [activeLayer, setActiveLayer] = useState(initialState.activeLayer);
   const center = initialState.center;
@@ -84,19 +109,15 @@ const Map = () => {
   const DOUBLE_CLICK_DELAY = 300; // ms
 
   // Function to reset to initial state
-  const resetToInitialState = () => {
-    console.log('RESET: Initiating state reset:', {
-      currentSelected: selected,
-      currentProject: selectedProject,
-      currentLayer: activeLayer,
-      isZooming
-    });
+  const resetToInitialState = useCallback(() => {
+    console.log('RESET: Resetting to initial state');
 
-    // Reset all state variables to match initial state
+    // Clear selections
+    setSelected(null);
+    setLastSelectedAhupuaa(null);
     setSelectedProject(null);
-    setActiveLayer('ahupuaa');
     setIsZooming(false);
-    setSelected(null); // Reset selected ahupuaa as well
+    setActiveLayer('ahupuaa');
 
     // Re-enable all ahupuaa layers through the GeoJSON ref
     if (geoJSONRef.current) {
@@ -145,7 +166,7 @@ const Map = () => {
     if (mapRef.current) {
       mapRef.current.setView(initialState.center, initialState.zoom);
     }
-  };
+  }, []);
 
   // Create custom panes when the map is ready
   const onMapLoad = (map) => {
@@ -160,6 +181,10 @@ const Map = () => {
     if (!map.getPane('plotsPane')) {
       map.createPane('plotsPane');
       map.getPane('plotsPane').style.zIndex = 700;
+    }
+    if (!map.getPane('sensorsPane')) {
+      map.createPane('sensorsPane');
+      map.getPane('sensorsPane').style.zIndex = 750; // Above plots
     }
   }
 
@@ -242,17 +267,30 @@ const Map = () => {
 
   // Get all sensors
   const sensors = useMemo(() => {
-    if (!selected) return [];
+    console.log('DEBUG: Building sensor data:', {
+      selected,
+      selectedProject,
+      activeLayer
+    });
+
+    if (!selected) {
+      console.log('DEBUG: No ahupuaa selected, no sensors to show');
+      return [];
+    }
 
     const selectedAhupuaa = zonesData.ahupuaas.find(a => a.name === selected);
-    if (!selectedAhupuaa) return [];
+    if (!selectedAhupuaa) {
+      console.log('DEBUG: No matching ahupuaa found for sensors');
+      return [];
+    }
 
-    return selectedAhupuaa.projects.flatMap(project => {
+    const allSensors = selectedAhupuaa.projects.flatMap(project => {
       // Get project-level sensors
       const projectSensors = (project.sensors || []).map(sensor => ({
         ...sensor,
         projectId: project.id,
-        projectName: project.name
+        projectName: project.name,
+        ahupuaaName: selectedAhupuaa.name
       }));
 
       // Get plot-level sensors
@@ -262,13 +300,30 @@ const Map = () => {
           projectId: project.id,
           projectName: project.name,
           plotId: plot.id,
-          plotName: plot.name
+          plotName: plot.name,
+          ahupuaaName: selectedAhupuaa.name
         }))
       );
 
-      return [...projectSensors, ...plotSensors];
+      const combinedSensors = [...projectSensors, ...plotSensors];
+      console.log('DEBUG: Project sensors:', {
+        projectName: project.name,
+        projectSensorCount: projectSensors.length,
+        plotSensorCount: plotSensors.length,
+        totalSensors: combinedSensors.length
+      });
+
+      return combinedSensors;
     });
-  }, [selected]);
+
+    console.log('DEBUG: Total sensors found:', {
+      ahupuaa: selectedAhupuaa.name,
+      count: allSensors.length,
+      sensors: allSensors
+    });
+
+    return allSensors;
+  }, [selected, selectedProject]);
 
   // Debug effect to log state changes - moved after all useMemo definitions
   useEffect(() => {
@@ -301,26 +356,36 @@ const Map = () => {
     });
   }, [activeLayer, isZooming]);
 
-  const handleAhupuaaClick = (feature, layer, e) => {
-    if (activeLayer !== 'ahupuaa') {
-      console.log('BLOCKED: Ahupuaa click - wrong layer:', {
-        attempted: activeLayer,
-        required: 'ahupuaa'
+  const handleAhupuaaClick = useCallback((feature, layer, e) => {
+    const ahupuaaName = feature.properties.ahupuaa;
+    console.log('HANDLER: Processing ahupuaa click:', {
+      name: ahupuaaName,
+      currentSelected: selected,
+      lastSelected: lastSelectedAhupuaa
+    });
+
+    // Block if we're zooming
+    if (isZooming) {
+      console.log('BLOCKED: Ahupuaa interaction blocked:', {
+        name: ahupuaaName,
+        reason: 'zooming in progress'
       });
       return;
     }
 
-    const ahupuaaName = feature.properties.ahupuaa || feature.properties.name;
-    console.log('INTERACTION: Processing ahupuaa click:', {
-      type: 'ahupuaa_click',
-      name: ahupuaaName,
-      currentState: {
-        selected,
-        selectedProject,
-        activeLayer,
-        isZooming
-      }
-    });
+    // Reset state if selecting a different ahupuaa
+    if (selected && selected !== ahupuaaName) {
+      console.log('STATE: Resetting state for new ahupuaa:', {
+        from: selected,
+        to: ahupuaaName,
+        lastSelected: lastSelectedAhupuaa
+      });
+      resetToInitialState();
+    }
+
+    // Update selections
+    setLastSelectedAhupuaa(selected || ahupuaaName); // Track the previous selection
+    setSelected(ahupuaaName);
 
     // Clear project selection and reset layer state
     if (selectedProject) {
@@ -351,13 +416,6 @@ const Map = () => {
         reason: 'ahupuaa click'
       });
 
-      // Update selection after starting zoom
-      console.log('STATE: Updating ahupuaa selection:', {
-        from: selected,
-        to: ahupuaaName
-      });
-      setSelected(ahupuaaName);
-
       // Get center of the ahupuaa polygon
       const center = layer.getBounds().getCenter();
       console.log('ZOOM: Ahupuaa zoom initiated:', {
@@ -385,7 +443,7 @@ const Map = () => {
         setIsZooming(false);
       }, 1000);
     }
-  };
+  }, [selected, lastSelectedAhupuaa, selectedProject, isZooming, resetToInitialState]);
 
   const handleProjectClick = (feature, layer, e, bypassZoomCheck = false) => {
     const projectName = feature.properties.name;
@@ -569,68 +627,115 @@ const Map = () => {
               style={(feature) => {
                 const ahupuaaName = feature.properties.ahupuaa;
                 const isSelected = ahupuaaName === selected;
-                return {
+                const isAhupuaaLayer = activeLayer === 'ahupuaa';
+
+                // Base style
+                const style = {
                 weight: 2,
                   color: '#228B22',
                   fillColor: '#228B22',
                 fill: true,
-                  fillOpacity: activeLayer === 'ahupuaa' ? 0.1 : 0.02,
-                  interactive: !isSelected && activeLayer === 'ahupuaa',
-                  pointerEvents: !isSelected && activeLayer === 'ahupuaa' ? 'auto' : 'none',
-                  pane: 'ahupuaaPane',
-                  className: !isSelected && activeLayer === 'ahupuaa' ? '' : 'pointer-events-none'
+                  fillOpacity: isAhupuaaLayer ? 0.1 : 0.02,
+                  pane: 'ahupuaaPane'
+                };
+
+                // Add interaction properties
+                if (!isAhupuaaLayer || isSelected) {
+                  // Disable all interactions when not in ahupuaa layer or when selected
+                  return {
+                    ...style,
+                    interactive: false,
+                    pointerEvents: 'none',
+                    className: 'pointer-events-none'
+                  };
+                }
+
+                // Enable interactions only in ahupuaa layer for unselected features
+                return {
+                  ...style,
+                  interactive: true,
+                  pointerEvents: 'auto',
+                  className: ''
                 };
               }}
               onEachFeature={(feature, layer) => {
                 // First, remove any existing event listeners
                 layer.off();
 
-                // Always attach click handler
-                layer.on({
-                  click: (e) => {
-                    const ahupuaaName = feature.properties.ahupuaa;
-                    console.log('INTERACTION: Ahupuaa polygon clicked:', {
-                      type: 'ahupuaa',
-                      name: ahupuaaName,
-                      activeLayer,
-                      isZooming,
-                      hasClickTimer: !!clickTimerRef.current
-                    });
-
-                    // Always stop propagation for both single and double clicks
-                    L.DomEvent.stopPropagation(e.originalEvent);
-
-                    // If we're zooming or this is the selected ahupuaa, ignore the click entirely
-                    if (isZooming || ahupuaaName === selected) {
-                      console.log('BLOCKED: Ahupuaa interaction blocked:', {
+                // Only attach click handlers if we're in ahupuaa layer
+                if (activeLayer === 'ahupuaa') {
+                  layer.on({
+                    click: (e) => {
+                      const ahupuaaName = feature.properties.ahupuaa;
+                      console.log('INTERACTION: Ahupuaa polygon clicked:', {
+                        type: 'ahupuaa',
                         name: ahupuaaName,
-                        reason: isZooming ? 'zooming in progress' : 'already selected'
+                        activeLayer,
+                        isZooming,
+                        hasClickTimer: !!clickTimerRef.current,
+                        currentSelected: selected,
+                        lastSelected: lastSelectedAhupuaa
                       });
-                      return;
+
+                      // Always stop propagation for both single and double clicks
+                      L.DomEvent.stopPropagation(e.originalEvent);
+                      L.DomEvent.preventDefault(e.originalEvent);
+
+                      // If there's a pending click timer, this is a double click - always allow for map zoom
+                      if (clickTimerRef.current) {
+                        console.log('INTERACTION: Double click detected on ahupuaa:', {
+                          name: ahupuaaName,
+                          action: 'allowing map zoom'
+                        });
+                        clearTimeout(clickTimerRef.current);
+                        clickTimerRef.current = null;
+                        return;
+                      }
+
+                      // Check if this is the most recently selected ahupuaa
+                      const isCurrentOrLastAhupuaa = ahupuaaName === selected || ahupuaaName === lastSelectedAhupuaa;
+                      if (isCurrentOrLastAhupuaa) {
+                        console.log('BLOCKED: Ahupuaa single click blocked:', {
+                          name: ahupuaaName,
+                          reason: 'was most recently selected ahupuaa',
+                          currentSelected: selected,
+                          lastSelected: lastSelectedAhupuaa
+                        });
+                        return;
+                      }
+
+                      // Set a timer for potential double click
+                      clickTimerRef.current = setTimeout(() => {
+                        console.log('INTERACTION: Single click confirmed on ahupuaa:', {
+                          name: ahupuaaName,
+                          action: 'processing selection',
+                          currentSelected: selected,
+                          lastSelected: lastSelectedAhupuaa,
+                          isCurrentOrLastAhupuaa
+                        });
+                        clickTimerRef.current = null;
+                        handleAhupuaaClick(feature, layer, e);
+                      }, DOUBLE_CLICK_DELAY);
                     }
-
-                    // If there's a pending click timer, this is a double click
-                    if (clickTimerRef.current) {
-                      console.log('INTERACTION: Double click detected on ahupuaa:', {
-                        name: ahupuaaName,
-                        action: 'allowing map zoom'
-                      });
-                      clearTimeout(clickTimerRef.current);
-                      clickTimerRef.current = null;
-                      return;
-                    }
-
-                    // Set a timer for potential double click
-                    clickTimerRef.current = setTimeout(() => {
-                      console.log('INTERACTION: Single click confirmed on ahupuaa:', {
-                        name: ahupuaaName,
-                        action: 'processing selection'
-                      });
-                      clickTimerRef.current = null;
-                      handleAhupuaaClick(feature, layer, e);
-                    }, DOUBLE_CLICK_DELAY);
+                  });
+                } else {
+                  // When not in ahupuaa layer, ensure the layer is completely non-interactive
+                  layer.setStyle({
+                    interactive: false,
+                    pointerEvents: 'none'
+                  });
+                  if (layer._path) {
+                    layer._path.classList.add('pointer-events-none');
                   }
-                });
+                  console.log('DEBUG: Ahupuaa layer disabled:', {
+                    name: feature.properties.ahupuaa,
+                    reason: `active layer is ${activeLayer}`,
+                    state: {
+                      interactive: false,
+                      pointerEvents: 'none'
+                    }
+                  });
+                }
               }}
               eventHandlers={{
                 add: (e) => {
@@ -640,37 +745,43 @@ const Map = () => {
                     activeLayer
                   });
 
-                  // If there's a selected ahupuaa, make sure its layer is non-interactive
-                  if (selected) {
-                    layer.eachLayer((l) => {
-                      const featureName = l.feature?.properties?.ahupuaa;
-                      if (featureName === selected) {
-                        console.log('DISABLE: Ahupuaa layer disabled:', {
-                          name: featureName,
-                          reason: 'selected ahupuaa'
-                        });
-                        l.setStyle({
-                          interactive: false,
-                          pointerEvents: 'none'
-                        });
-                        if (l._path) {
-                          l._path.classList.add('pointer-events-none');
-                        }
-                      } else {
-                        console.log('ENABLE: Ahupuaa layer enabled:', {
-                          name: featureName,
-                          reason: 'not selected'
-                        });
-                        l.setStyle({
-                          interactive: true,
-                          pointerEvents: 'auto'
-                        });
-                        if (l._path) {
-                          l._path.classList.remove('pointer-events-none');
-                        }
+                  // Disable all ahupuaa interactions when not in ahupuaa layer
+                  layer.eachLayer((l) => {
+                    const featureName = l.feature?.properties?.ahupuaa;
+                    if (activeLayer !== 'ahupuaa' || featureName === selected) {
+                      console.log('DISABLE: Ahupuaa layer disabled:', {
+                        name: featureName,
+                        reason: activeLayer !== 'ahupuaa' ? 'wrong layer' : 'selected ahupuaa'
+                      });
+                      l.setStyle({
+                        interactive: false,
+                        pointerEvents: 'none'
+                      });
+                      if (l._path) {
+                        l._path.classList.add('pointer-events-none');
                       }
-                    });
-                  }
+                      // Add explicit click prevention
+                      if (l._container) {
+                        l._container.style.pointerEvents = 'none';
+                      }
+                    } else {
+                      console.log('ENABLE: Ahupuaa layer enabled:', {
+                        name: featureName,
+                        reason: 'in ahupuaa layer and not selected'
+                      });
+                      l.setStyle({
+                        interactive: true,
+                        pointerEvents: 'auto'
+                      });
+                      if (l._path) {
+                        l._path.classList.remove('pointer-events-none');
+                      }
+                      // Remove click prevention
+                      if (l._container) {
+                        l._container.style.pointerEvents = '';
+                      }
+                    }
+                  });
                 }
               }}
             />
@@ -767,23 +878,29 @@ const Map = () => {
             key={`plots-${selectedProject}-${activeLayer}`}
             data={plotsGeoJSON}
             style={(feature) => {
-              const isActive = activeLayer === 'plots' && !isZooming;
+              const isActive = activeLayer === 'plots';
               return {
                 weight: 2,
                 color: '#FF4081',
                 fillColor: '#FF4081',
                 fillOpacity: activeLayer === 'plots' ? 0.4 : 0,
-                interactive: isActive,
-                pointerEvents: isActive ? 'auto' : 'none',
+                interactive: true, // Always interactive to catch clicks
+                pointerEvents: 'auto',
                 pane: 'plotsPane',
                 className: isActive ? '' : 'pointer-events-none'
               };
             }}
             onEachFeature={(feature, layer) => {
               layer.off();
-              if (activeLayer === 'plots' && !isZooming) {
+
+              // In plots view, attach click handlers
+              if (activeLayer === 'plots') {
                 layer.on({
                   click: (e) => {
+                    // Always stop propagation in plots layer
+                    L.DomEvent.stopPropagation(e.originalEvent);
+                    L.DomEvent.preventDefault(e.originalEvent);
+
                     const plotName = feature.properties.name;
                     console.log('INTERACTION: Plot polygon clicked:', {
                       type: 'plot',
@@ -793,17 +910,19 @@ const Map = () => {
                       isZooming
                     });
 
-                    if (activeLayer !== 'plots' || isZooming) {
+                    if (isZooming) {
                       console.log('BLOCKED: Plot interaction blocked:', {
                         name: plotName,
-                        reason: activeLayer !== 'plots' ? 'wrong layer' : 'zooming in progress'
+                        reason: 'zooming in progress'
                       });
                       return;
                     }
+
                     console.log('ZOOM: Plot zoom initiated:', {
                       name: plotName,
                       bounds: layer.getBounds()
                     });
+
                     const map = mapRef.current;
                     if (map) {
                       setIsZooming(true);
@@ -833,7 +952,7 @@ const Map = () => {
                   activeLayer
                 });
 
-                // Re-enable all plot layers
+                // Always enable plot layers in plots view
                 layer.eachLayer((l) => {
                   const plotName = l.feature?.properties?.name;
                   console.log('ENABLE: Plot layer enabled:', {
@@ -848,6 +967,16 @@ const Map = () => {
                     l._path.classList.remove('pointer-events-none');
                   }
                 });
+
+                // Add click handler to the entire GeoJSON container to intercept all clicks
+                if (layer._container && activeLayer === 'plots') {
+                  console.log('DEBUG: Adding click interceptor to plots container');
+                  layer._container.addEventListener('click', (e) => {
+                    console.log('DEBUG: Plots container click intercepted');
+                    e.stopPropagation();
+                    e.preventDefault();
+                  }, true); // Use capture phase to ensure we catch clicks before they propagate
+                }
               }
             }}
           />
@@ -857,38 +986,124 @@ const Map = () => {
           <LayerGroup>
             {sensors
               .filter(sensor => {
-                if (activeLayer === 'plots') {
-                  return sensor.projectName === selectedProject;
+                // Show sensors based on active layer
+                if (activeLayer === 'plots' && selectedProject) {
+                  const shouldShow = sensor.projectName === selectedProject;
+                  console.log('DEBUG: Filtering sensor for plots view:', {
+                    sensorName: sensor.name,
+                    sensorProject: sensor.projectName,
+                    selectedProject,
+                    shouldShow,
+                    coordinates: [sensor.latitude, sensor.longitude]
+                  });
+                  return shouldShow;
                 }
-                return activeLayer !== 'ahupuaa';
+                if (activeLayer === 'projects' && selected) {
+                  const shouldShow = sensor.ahupuaaName === selected;
+                  console.log('DEBUG: Filtering sensor for projects view:', {
+                    sensorName: sensor.name,
+                    sensorAhupuaa: sensor.ahupuaaName,
+                    selected,
+                    shouldShow,
+                    coordinates: [sensor.latitude, sensor.longitude]
+                  });
+                  return shouldShow;
+                }
+                return false;
               })
-              .map((sensor, index) => (
-                  <Marker
-                    key={index}
-                  position={[sensor.latitude, sensor.longitude]}
-                    eventHandlers={{
-                    click: () => {
-                      console.log('INTERACTION: Sensor clicked:', {
-                        type: 'sensor',
-                        name: sensor.name,
-                        project: sensor.projectName,
-                        plot: sensor.plotName,
-                        activeLayer
-                      });
-                    }
-                  }}
-                >
-                  <Popup>
-                    <div>
-                      <h3>{sensor.name}</h3>
-                      <p>Project: {sensor.projectName}</p>
-                      <p>Patch: {sensor.plotName}</p>
-                      <p>{sensor.metadata.description}</p>
-                      <p>Latest Value: {sensor.data[sensor.data.length - 1].value} {sensor.metadata.unit}</p>
-                    </div>
+              .map((sensor, index) => {
+                // IMPORTANT: Leaflet uses [latitude, longitude] order
+                const position = [sensor.latitude, sensor.longitude];
+                console.log('DEBUG: Rendering sensor marker:', {
+                  name: sensor.name,
+                  position,
+                  project: sensor.projectName,
+                  plot: sensor.plotName,
+                  activeLayer
+                });
+
+                return (
+                  <>
+                    {/* Add a CircleMarker for debugging - this will always be visible */}
+                    <CircleMarker
+                      key={`debug-circle-${sensor.id || index}`}
+                      center={position}
+                      radius={10}
+                      color="red"
+                      fillColor="red"
+                      fillOpacity={0.5}
+                      weight={2}
+                      pane="sensorsPane"
+                    >
+                      <Popup>
+                        <div>
+                          <h3>Debug: {sensor.name}</h3>
+                          <p>Coordinates: {position.join(', ')}</p>
+                          <p>Project: {sensor.projectName}</p>
+                          {sensor.plotName && <p>Plot: {sensor.plotName}</p>}
+                        </div>
+                      </Popup>
+                    </CircleMarker>
+
+                    {/* Regular marker with icon */}
+                    <Marker
+                      key={`sensor-${sensor.id || index}`}
+                      position={position}
+                      icon={sensorIcon}
+                      pane="sensorsPane"
+                      eventHandlers={{
+                        add: (e) => {
+                          console.log('DEBUG: Sensor marker added to map:', {
+                            name: sensor.name,
+                            position,
+                            layer: e.target
+                          });
+                        },
+                        click: (e) => {
+                          L.DomEvent.stopPropagation(e.originalEvent);
+                          console.log('INTERACTION: Sensor clicked:', {
+                            type: 'sensor',
+                            name: sensor.name,
+                            project: sensor.projectName,
+                            plot: sensor.plotName,
+                            activeLayer,
+                            position
+                          });
+
+                          if ((activeLayer === 'plots' || activeLayer === 'projects') && !isZooming) {
+                            const map = mapRef.current;
+                            if (map) {
+                              setIsZooming(true);
+                              map.setView(position, 20, {
+                                animate: true,
+                                duration: 1
+                              });
+                              setTimeout(() => {
+                                setIsZooming(false);
+                                console.log('ZOOM: Sensor zoom complete:', {
+                                  name: sensor.name,
+                                  position
+                                });
+                              }, 1000);
+                            }
+                          }
+                        }
+                      }}
+                    >
+                      <Popup>
+                        <div>
+                          <h3>{sensor.name}</h3>
+                          <p>Coordinates: {position.join(', ')}</p>
+                          <p>Project: {sensor.projectName}</p>
+                          {sensor.plotName && <p>Plot: {sensor.plotName}</p>}
+                          <p>{sensor.metadata.description}</p>
+                          <p>Latest Value: {sensor.data[sensor.data.length - 1].value} {sensor.metadata.unit}</p>
+                        </div>
                     </Popup>
                     </Marker>
-              ))}
+                  </>
+                );
+              })}
           </LayerGroup>
         </LayersControl.Overlay>
       </LayersControl>
