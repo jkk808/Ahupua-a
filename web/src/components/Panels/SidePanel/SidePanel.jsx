@@ -21,7 +21,24 @@ const SidePanel = () => {
       {/* holds the links to different pages for water and soil */}
       {/* <HealthScoresCell></HealthScoresCell> */}
 
-        <div className="space-y-4 pt-4">
+        <div className="space-y-4">
+
+            <div className='border border-gray-200 drop-shadow-sm w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
+              <h3 className="text-sm font-medium text-gray-500 mb-2">
+              Stream Health
+              </h3>
+              <HealthScore score={0.9}></HealthScore>
+            </div>
+
+            <div className='border border-gray-200 drop-shadow-sm w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
+              <h3 className="text-sm font-medium text-gray-500 mb-2">
+              Overall Soil Health
+              </h3>
+              <HealthScore score={0.6}></HealthScore>
+            </div>
+
+          <br></br>
+
           <Link to={routes.home()}>
             <button
             onClick={toggleDropdown}
@@ -43,26 +60,25 @@ const SidePanel = () => {
             </div>
           )}
 
-          <div>
-              <button className='border border-gray-200 drop-shadow-sm w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
-                <h3 className="text-sm font-medium text-gray-500 mb-2">
-                Stream Health
-                </h3>
-                <HealthScore score={0.9}></HealthScore>
-              </button>
-           </div>
+          <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <Link to={routes.huliʻia()}>
+            Kilo
+            </Link>
+          </button>
+
           <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
             <Link to={routes.map()}>
             Map
             </Link>
           </button>
+
           {/* <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
             Export Data
           </button> */}
         {/* <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
             Help
           </button> */}
-      </div>
+        </div>
 
     </div>
   )
