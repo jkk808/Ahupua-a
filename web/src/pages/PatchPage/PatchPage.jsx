@@ -5,8 +5,16 @@ import { useState } from 'react'
 import GraphCell from 'src/components/Graph/GraphCell'
 import GraphPatchCell from 'src/components/GraphPatchCell/GraphPatchCell'
 
+const patches = [
+  { id: 'patch-1', name: 'top bed' },
+  { id: 'patch-2', name: 'top-middle bed' },
+  { id: 'patch-3', name: 'middle-bottom bed' },
+  { id: 'patch-4', name: 'bottom bed' },
+  // Add as many as you want
+]
+
 const PatchPage = () => {
-  const { id } = useParams()
+  const { name } = useParams()
   const [activeTab, setActiveTab] = useState('Water')
 
   const tabs = ['Water', 'Soil', 'Soil Composition']
@@ -14,6 +22,7 @@ const PatchPage = () => {
   return (
     <>
       <Metadata title="Patch" description="Patch page" />
+      <div>{name}</div>
       <div className="p-6 max-w-4xl mx-auto">
         {/* Tabs */}
         <div className="flex space-x-4 mb-6 border-b">
@@ -39,12 +48,18 @@ const PatchPage = () => {
           {/* Replace this with real data once your PatchCell is ready */}
           {activeTab === 'Water' && (
             <div className='flex justify-center gap-{20px}'>
-              <GraphPatchCell key={activeTab} type='ntu' name='top bed'></GraphPatchCell>
+              <GraphPatchCell key={activeTab} type='ntu' name={patches[0].name}></GraphPatchCell>
+              <GraphPatchCell key={activeTab} type='w_ph' name={patches[0].name}></GraphPatchCell>
             </div>
           )
           }
           {activeTab === 'Soil' &&
-            <GraphCell key={activeTab} type='s_ph'></GraphCell>
+            (
+              <div className='flex justify-center gap-{20px}'>
+                <GraphPatchCell key={activeTab} type='s_ph' name={name}></GraphPatchCell>
+                <GraphPatchCell key={activeTab} type='s_moi' name={name}></GraphPatchCell>
+              </div>
+            )
           }
           {activeTab === 'Soil Composition' && <p>Soil composition details will go here.</p>}
         </div>

@@ -5,10 +5,10 @@ import { useState } from 'react'
 import PatchButton from 'src/components/PatchButton/PatchButton'
 
 const patches = [
-  { id: 'patch-1', name: 'Patch 1' },
-  { id: 'patch-2', name: 'Patch 2' },
-  { id: 'patch-3', name: 'Patch 3' },
-  { id: 'patch-4', name: 'Patch 4' },
+  { id: 'patch-1', name: 'top-bed' },
+  { id: 'patch-2', name: 'top-middle-bed' },
+  { id: 'patch-3', name: 'middle-bottom-bed' },
+  { id: 'patch-4', name: 'bottom-bed' },
   // Add as many as you want
 ]
 
@@ -34,8 +34,7 @@ const SidePanel = () => {
             <div className="origin-top-right mt-2 w-full">
               {patches.map((patch) => (
                 <Link
-                  key={patch.id}
-                  to={routes.patch({ id: patch.id })}
+                  to={routes.patch({ name: patch.name })}
                   className="block px-4 py-2 border border-gray-200 rounded hover:bg-gray-100 text-sm"
                 >
                   {patch.name}
