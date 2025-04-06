@@ -16,6 +16,12 @@ const HuliIaPage = () => {
     <>
       <Metadata title="HuliIa" description="HuliIa page" />
 
+      <h1 className='text-xl pb-4'>
+        Huli ʻIa
+      </h1>
+      <div>
+        Huli ʻia is an observational process documenting seasonal changes and shifts across entire landscapes, ma uka to ma kai and everything in between, above and around. It is a tool used to identify dominant correlating cycles to support and guide our management and best-practices in supporting a productive and thriving community: ʻĀina Momona.
+      </div>
       <div className="p-6">
       <div className="mb-4">
         <label name="version" className="block mb-2 font-bold">
@@ -111,6 +117,10 @@ const HuliIaPage = () => {
         </Submit>
       </Form>
     </div>
+
+    <p>
+        Mahalo to Auamo.org for providing this resource to aid na kilo ʻāina & huli ʻia.
+    </p>
     </>
   )
 }
