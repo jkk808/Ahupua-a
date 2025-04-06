@@ -18,18 +18,19 @@ generator client {
 // to create migrations for them and apply to your dev DB.
 
 model Sensor {
-  id        Int         @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String?
+  serial_id String   @unique
   location  String?
   metrics   Metric[]
 }
 
 model Metric {
-  id        Int         @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   value     Float
-  timestamp DateTime    @default(now())
-  type      String      // can use enum when transfer to postgres
-  sensor    Sensor?     @relation(fields: [sensorID], references: [id])
+  timestamp DateTime @default(now())
+  type      String // can use enum when transfer to postgres
+  sensor    Sensor?  @relation(fields: [sensorID], references: [id])
   sensorID  Int
 }
 

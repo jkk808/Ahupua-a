@@ -26,6 +26,22 @@ export const sensorsData =({ type }) => {
   });
 };
 
+export const sensorsDataByLocation = ({ location, type }) => {
+  return db.sensor.findFirst({
+    where: {
+      location,
+      metrics: {
+        some: { type }
+      }
+     },
+     include: {
+      metrics: {
+        where: { type },
+      },
+     },
+  })
+}
+
 export const createSensor = ({ input }) => {
   return db.sensor.create({
     data: input,

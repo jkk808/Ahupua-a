@@ -3,12 +3,12 @@ import HealthScoresCell from 'src/components/HealthScoresCell/HealthScoresCell'
 import Patch from 'src/components/Patch/Patch'
 import { useState } from 'react'
 import PatchButton from 'src/components/PatchButton/PatchButton'
+import HealthScore from 'src/components/HealthScore/HealthScore'
 
 const patches = [
-  { id: 'patch-1', name: 'Patch 1' },
-  { id: 'patch-2', name: 'Patch 2' },
-  { id: 'patch-3', name: 'Patch 3' },
-  { id: 'patch-4', name: 'Patch 4' },
+  { id: 'patch-1', location: 'top-bed' },
+  { id: 'patch-3', location: 'mid-bed' },
+  { id: 'patch-4', location: 'bot-bed' },
   // Add as many as you want
 ]
 
@@ -21,7 +21,24 @@ const SidePanel = () => {
       {/* holds the links to different pages for water and soil */}
       {/* <HealthScoresCell></HealthScoresCell> */}
 
-        <div className="space-y-4 pt-4">
+        <div className="space-y-4">
+
+            <div className='border border-gray-200 drop-shadow-sm w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
+              <h3 className="text-sm font-medium text-gray-500 mb-2">
+              Stream Health
+              </h3>
+              <HealthScore score={0.9}></HealthScore>
+            </div>
+
+            <div className='border border-gray-200 drop-shadow-sm w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
+              <h3 className="text-sm font-medium text-gray-500 mb-2">
+              Overall Soil Health
+              </h3>
+              <HealthScore score={0.6}></HealthScore>
+            </div>
+
+          <br></br>
+
           <Link to={routes.home()}>
             <button
             onClick={toggleDropdown}
@@ -34,31 +51,34 @@ const SidePanel = () => {
             <div className="origin-top-right mt-2 w-full">
               {patches.map((patch) => (
                 <Link
-                  key={patch.id}
-                  to={routes.patch({ id: patch.id })}
+                  to={routes.patch({ location: patch.location })}
                   className="block px-4 py-2 border border-gray-200 rounded hover:bg-gray-100 text-sm"
                 >
-                  {patch.name}
+                  {patch.location}
                 </Link>
               ))}
             </div>
           )}
 
           <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
-            All Sensors
+            <Link to={routes.huliʻia()}>
+            Kilo
+            </Link>
           </button>
+
           <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
             <Link to={routes.map()}>
             Map
             </Link>
           </button>
+
           {/* <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
             Export Data
           </button> */}
         {/* <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
             Help
           </button> */}
-      </div>
+        </div>
 
     </div>
   )

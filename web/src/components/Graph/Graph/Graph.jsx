@@ -6,10 +6,12 @@ function formatTitle(dataType) {
   switch (dataType) {
     case 'ntu':
       return "Turbidity"
-    case 'tds':
-      return "Total Dissolved Solids"
+    case 'w_ph':
+      return "Water pH"
     case 's_ph':
-      return "Soil pH / Moisture %"
+      return "Soil pH"
+    case 's_moi':
+      return "Soil Moisture"
     default:
       return "Unknown"
   }
