@@ -3,9 +3,48 @@
     {
       "id": 0,
       "name": "Nation of Hawaii",
-      "latitude": 21.339669,
-      "longitude": -157.745865,
-      "zoom": 18
+      "zoom": 18,
+      "polygon": {
+        "type": "Feature",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [-157.746865, 21.340669],
+            [-157.744865, 21.340669],
+            [-157.744865, 21.338669],
+            [-157.746865, 21.338669],
+            [-157.746865, 21.340669]
+          ]]
+        }
+      },
+      "patches": [
+        {
+          "id": 0,
+          "name": "Kalo Patch",
+          "sensors": [
+            {
+              "id": 0,
+              "name": "Sensor 1",
+              "latitude": 21.339669,
+              "longitude": -157.745865,
+              "data": [
+                {
+                  "timestamp": "2023-10-01T00:00:00Z",
+                  "value": 25.4
+                },
+                {
+                  "timestamp": "2023-10-02T00:00:00Z",
+                  "value": 26.1
+                }
+              ],
+              "metadata": {
+                "unit": "cm",
+                "description": "Soil moisture level"
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 }

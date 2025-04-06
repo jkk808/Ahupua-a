@@ -12,7 +12,7 @@ import {
   GeoJSON,
   CircleMarker,
 } from 'react-leaflet'
-import { LatLng } from 'leaflet'
+import L, { LatLng } from 'leaflet'
 import { EditControl } from "react-leaflet-draw"
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-draw/dist/leaflet.draw.css'
@@ -63,18 +63,58 @@ const Map = () => {
   const geoJSONRef = useRef(null)
   const [selected, setSelected] = useState(null)
   const center = [21.4389, -158]
-  // const center = [21.339669, -157.745865] //coord for the Nation of Hawaii
   const zoom = 10.5
+  const [isZooming, setIsZooming] = useState(false);
+  const [activeLayer, setActiveLayer] = useState(null);
+
+  // Create custom panes when the map is ready
+  const onMapLoad = (map) => {
+    if (!map.getPane('projectsPane')) {
+      map.createPane('projectsPane');
+      map.getPane('projectsPane').style.zIndex = 650;
+    }
+    if (!map.getPane('ahupuaaPane')) {
+      map.createPane('ahupuaaPane');
+      map.getPane('ahupuaaPane').style.zIndex = 400;
+    }
+  }
+
+  // Convert projects to GeoJSON format for rendering
+  const projectsGeoJSON = useMemo(() => ({
+    type: "FeatureCollection",
+    features: zonesData.projects.map(project => ({
+      type: "Feature",
+      geometry: project.polygon.geometry,
+      properties: {
+        id: project.id,
+        name: project.name,
+        zoom: project.zoom
+      }
+    }))
+  }), []);
+
+  // Get all sensors from all projects
+  const sensors = useMemo(() =>
+    zonesData.projects.flatMap(project =>
+      project.patches.flatMap(patch =>
+        patch.sensors.map(sensor => ({
+          ...sensor,
+          projectName: project.name,
+          patchName: patch.name
+        }))
+      )
+    ), []
+  );
 
   const zoomToFeature = (e) => {
     const map = mapRef.current
     if (map) {
-      map.fitBounds(e.target.getBounds())
+      console.log('Zooming to ahupuaa:', e.layer.feature.properties.ahupuaa)
+      map.fitBounds(e.layer.getBounds())
     }
   }
 
-  const highlightFeature = (e) => {
-    const layer = e.target
+  const highlightFeature = (layer) => {
     layer.setStyle({
       weight: 5,
       color: '#228B22',
@@ -82,28 +122,47 @@ const Map = () => {
       fillOpacity: 0.4,
     })
 
-    // Upding the selected ahupuaa
+    // Updating the selected ahupuaa
     setSelected(layer.feature.properties.ahupuaa)
 
     // Bring the layer to the front, so that outlines is not hidden
     layer.bringToFront()
   }
 
-  const resetHighlight = (e) => {
+  const resetHighlight = (layer) => {
     const geoJSON = geoJSONRef.current
-    geoJSON.resetStyle(e.target)
+    geoJSON.resetStyle(layer)
     setSelected(null)
   }
 
-  const handleMarkerClick = (zone) => {
-    const map = mapRef.current
+  const handleProjectClick = (project, e) => {
+    if (e) {
+      e.originalEvent.stopPropagation();
+      e.originalEvent.preventDefault();
+      L.DomEvent.stopPropagation(e);
+      L.DomEvent.stop(e);
+    }
+
+    const map = mapRef.current;
     if (map) {
-      const coord = [zone.latitude, zone.longitude]
-      console.log(zone)
-      map.setView(coord, zone.zoom)
+      console.log('Clicked project:', project);
+      setIsZooming(true);
+      setActiveLayer('projects');
+
+      const bounds = L.geoJSON({
+        type: "Feature",
+        geometry: project.geometry
+      }).getBounds();
+
+      map.fitBounds(bounds);
+      map.setZoom(project.properties.zoom);
+
+      // Reset zooming state after animation
+      setTimeout(() => {
+        setIsZooming(false);
+      }, 1000);
     }
   }
-
 
   return (
     <MapContainer
@@ -114,6 +173,7 @@ const Map = () => {
       maxZoom={22}
       attributionControl={false}
       style={{ height: '100%', width: '100%' }}
+      whenReady={({ target }) => onMapLoad(target)}
     >
       <FeatureGroup>
         <EditControl
@@ -146,55 +206,153 @@ const Map = () => {
         </LayersControl.BaseLayer>
 
         <LayersControl.Overlay name="Ahupuaa" checked>
-          <FeatureGroup>
-            <GeoJSON
-              ref={geoJSONRef}
-              data={ahupuaaData}
-              style={{
-                weight: 2,
-                fill: true,
-                fillOpacity: 0.1,
-              }}
-              onEachFeature={(feature, layer) => {
-                layer.on({
-                  click: zoomToFeature,
-                  mouseover: highlightFeature,
-                  mouseout: resetHighlight,
-                })
-              }}
-            />
-          </FeatureGroup>
+          <GeoJSON
+            ref={geoJSONRef}
+            data={ahupuaaData}
+            style={{
+              weight: 2,
+              color: '#228B22',
+              fillColor: '#228B22',
+              fill: true,
+              fillOpacity: 0.1,
+              interactive: !isZooming && activeLayer !== 'projects'
+            }}
+            pane="ahupuaaPane"
+            onEachFeature={(feature, layer) => {
+              layer.on({
+                click: (e) => {
+                  if (isZooming || activeLayer === 'projects') {
+                    L.DomEvent.stop(e);
+                    return false;
+                  }
+                  L.DomEvent.stopPropagation(e.originalEvent);
+                  console.log('Clicked ahupuaa:', feature.properties.ahupuaa);
+                  const map = mapRef.current;
+                  if (map) {
+                    setIsZooming(true);
+                    setActiveLayer('ahupuaa');
+                    map.fitBounds(layer.getBounds());
+                    setTimeout(() => {
+                      setIsZooming(false);
+                    }, 1000);
+                  }
+                  setSelected(feature.properties.ahupuaa);
+                },
+                mouseover: (e) => {
+                  if (isZooming || activeLayer === 'projects') {
+                    L.DomEvent.stop(e);
+                    return false;
+                  }
+                  L.DomEvent.stopPropagation(e.originalEvent);
+                  console.log('Hovering over ahupuaa:', feature.properties.ahupuaa);
+                  layer.setStyle({
+                    weight: 5,
+                    color: '#228B22',
+                    fillOpacity: 0.4,
+                  });
+                  layer.bindPopup(
+                    `<h3>${feature.properties.ahupuaa}</h3>`
+                  );
+                  setSelected(feature.properties.ahupuaa);
+                },
+                mouseout: (e) => {
+                  if (isZooming || activeLayer === 'projects') {
+                    L.DomEvent.stop(e);
+                    return false;
+                  }
+                  L.DomEvent.stopPropagation(e.originalEvent);
+                  layer.setStyle({
+                    weight: 2,
+                    color: '#228B22',
+                    fillOpacity: 0.1,
+                  });
+                  setSelected(null);
+                }
+              });
+            }}
+          />
         </LayersControl.Overlay>
+
+        <LayersControl.Overlay checked name="Projects">
+          <GeoJSON
+            data={projectsGeoJSON}
+            style={{
+              weight: 3,
+              color: '#4CAF50',
+              fillColor: '#4CAF50',
+              fillOpacity: 0.2,
+              interactive: !isZooming
+            }}
+            pane="projectsPane"
+            onEachFeature={(feature, layer) => {
+              layer.on({
+                click: (e) => {
+                  if (isZooming) {
+                    L.DomEvent.stop(e);
+                    return false;
+                  }
+                  e.originalEvent.stopPropagation();
+                  e.originalEvent.preventDefault();
+                  L.DomEvent.stopPropagation(e);
+                  L.DomEvent.stop(e);
+                  handleProjectClick(feature, e);
+                  return false;
+                },
+                mouseover: (e) => {
+                  if (isZooming) {
+                    L.DomEvent.stop(e);
+                    return false;
+                  }
+                  L.DomEvent.stopPropagation(e.originalEvent);
+                  console.log('Hovering over project:', feature.properties.name);
+                  console.log('Project details:', feature);
+                  layer.setStyle({
+                    weight: 5,
+                    color: '#4CAF50',
+                    fillOpacity: 0.4,
+                  });
+                  layer.bindPopup(
+                    `<h3>${feature.properties.name}</h3>
+                    <button class="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors" onclick="window.location.href='/sensor/${feature.properties.id}'">
+                      View Project
+                    </button>`
+                  );
+                },
+                mouseout: (e) => {
+                  if (isZooming) {
+                    L.DomEvent.stop(e);
+                    return false;
+                  }
+                  L.DomEvent.stopPropagation(e.originalEvent);
+                  layer.setStyle({
+                    weight: 3,
+                    color: '#4CAF50',
+                    fillOpacity: 0.2,
+                  });
+                }
+              });
+            }}
+          />
+        </LayersControl.Overlay>
+
         <LayersControl.Overlay checked name="Sensor Stations">
           <LayerGroup>
-            {/* Based on the focused ahupuaa, shows the sensor stations associated with it*/}
-          </LayerGroup>
-        </LayersControl.Overlay>
-        <LayersControl.Overlay checked name="Zones">
-          <LayerGroup>
-              {
-                zonesData.projects.map((project, index) => (
-                  <Marker
-                    key={index}
-                    color="green"
-                    position={[project.latitude, project.longitude]}
-                    eventHandlers={{
-                      click: () => handleMarkerClick(project),
-                      mouseover: (e) => e.target.openPopup(),
-                    }}
-                    >
-                    <Popup
-                    >
-                        <h3>{project.name}</h3>
-                        <Link routes={routes.sensor({ id: project.id })}>
-                          <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
-                            View Sensor
-                          </button>
-                        </Link>
-                    </Popup>
-                    </Marker>
-                ))
-              }
+            {sensors.map((sensor, index) => (
+              <Marker
+                key={index}
+                position={[sensor.latitude, sensor.longitude]}
+              >
+                <Popup>
+                  <div>
+                    <h3>{sensor.name}</h3>
+                    <p>Project: {sensor.projectName}</p>
+                    <p>Patch: {sensor.patchName}</p>
+                    <p>{sensor.metadata.description}</p>
+                    <p>Latest Value: {sensor.data[sensor.data.length - 1].value} {sensor.metadata.unit}</p>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
           </LayerGroup>
         </LayersControl.Overlay>
       </LayersControl>
@@ -205,326 +363,3 @@ const Map = () => {
 }
 
 export default Map
-// import L from 'leaflet'
-// import 'leaflet/dist/leaflet.css'
-
-// // Fix for default marker icons in leaflet
-// delete L.Icon.Default.prototype._getIconUrl
-// L.Icon.Default.mergeOptions({
-//   iconRetinaUrl: new URL(
-//     'leaflet/dist/images/marker-icon-2x.png',
-//     import.meta.url
-//   ).href,
-//   iconUrl: new URL('leaflet/dist/images/marker-icon.png', import.meta.url).href,
-//   shadowUrl: new URL('leaflet/dist/images/marker-shadow.png', import.meta.url)
-//     .href,
-// })
-
-// // Create custom icon for user location
-// const userIcon = new L.Icon({
-//   iconUrl: './user.png',
-//   shadowUrl:
-//     'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-//   iconSize: [35, 21],
-//   iconAnchor: [17.5, 21],
-//   popupAnchor: [0, -21],
-//   shadowSize: [0, 0],
-//   shadowAnchor: [12, 41],
-//   shadowPopupAnchor: [1, -34],
-// })
-
-// // Create custom icon for sensors
-// const sensorIcon = new L.Icon({
-//   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-//   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-//   iconSize: [25, 41],
-//   iconAnchor: [12, 41],
-//   popupAnchor: [0, -41],
-//   shadowSize: [41, 41],
-//   shadowAnchor: [12, 41],
-//   shadowPopupAnchor: [1, -34],
-// })
-
-// const GET_SENSORS = gql`
-//   query GetSensors {
-//     sensors {
-//       id
-//       name
-//       location
-//       latitude
-//       longitude
-//       metrics {
-//         id
-//         value
-//         type
-//         timestamp
-//       }
-//     }
-//   }
-// `
-
-// const Map = () => {
-//   const [error, setError] = useState(null)
-//   const [isMapReady, setIsMapReady] = useState(false)
-//   const mapRef = useRef(null)
-//   const markerRef = useRef(null)
-//   const mapContainerRef = useRef(null)
-//   const { data, loading, error: queryError } = useQuery(GET_SENSORS)
-
-//   // Initialize map
-//   useEffect(() => {
-//     let mounted = true
-//     let map = null
-//     let initTimeout = null
-
-//     const initMap = () => {
-//       try {
-//         if (!mapContainerRef.current) {
-//           console.log('Container not found, retrying...')
-//           return
-//         }
-
-//         // Ensure the container is in the DOM and has dimensions
-//         if (!document.body.contains(mapContainerRef.current)) {
-//           console.log('Container not in DOM, retrying...')
-//           return
-//         }
-
-//         const container = mapContainerRef.current
-//         if (!container.offsetWidth || !container.offsetHeight) {
-//           console.log('Container has no dimensions, retrying...')
-//           return
-//         }
-
-//         console.log('Initializing map with container:', container)
-
-//         // Initialize map with Oahu's center coordinates
-//         map = L.map(container).setView([21.4735, -157.965], 11.2)
-
-//         // Use Carto's tiles for a cleaner look
-//         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-//           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-//           subdomains: 'abcd',
-//           maxZoom: 20
-//         }).addTo(map)
-
-//         // Store map reference
-//         mapRef.current = map
-//         console.log('Map initialized and stored in ref:', map)
-
-//         // Set map as ready immediately after initialization
-//         setIsMapReady(true)
-//         console.log('Map ready state set to true')
-//       } catch (err) {
-//         console.error('Map initialization error:', err)
-//         setError('Failed to initialize map')
-//       }
-//     }
-
-//     // Initialize map after a short delay
-//     initTimeout = setTimeout(initMap, 100)
-
-//     return () => {
-//       mounted = false
-//       if (initTimeout) {
-//         clearTimeout(initTimeout)
-//       }
-//       if (map) {
-//         map.remove()
-//       }
-//     }
-//   }, []) // Only run once on mount
-
-//   // Get user location immediately
-//   useEffect(() => {
-//     if (!mapRef.current || !isMapReady) {
-//       console.log('Map not ready for user location:', {
-//         mapRef: !!mapRef.current,
-//         isMapReady
-//       })
-//       return
-//     }
-
-//     const map = mapRef.current
-//     console.log('Adding user location to map')
-
-//     if ('geolocation' in navigator) {
-//       navigator.geolocation.getCurrentPosition(
-//         (position) => {
-//           if (!mapRef.current) {
-//             console.log('Map reference lost while getting location')
-//             return
-//           }
-
-//           const { latitude, longitude } = position.coords
-//           console.log('User location received:', latitude, longitude)
-
-//           // Remove existing user marker if any
-//           if (markerRef.current) {
-//             map.removeLayer(markerRef.current)
-//           }
-
-//           // Add marker at user's location with custom icon
-//           markerRef.current = L.marker([latitude, longitude], {
-//             icon: userIcon,
-//           })
-//             .bindPopup('Your current location')
-//             .addTo(map)
-
-//           console.log('User location marker added successfully')
-//         },
-//         (error) => {
-//           console.error('Location error:', error)
-//           setError(
-//             'Unable to get your location. Please enable location services.'
-//           )
-//         }
-//       )
-//     } else {
-//       setError('Geolocation is not supported by your browser')
-//     }
-//   }, [mapRef.current, isMapReady]) // Run when map is initialized and ready
-
-//   // Add sensor markers when data is available and map is ready
-//   useEffect(() => {
-//     console.log('Sensor data received:', data?.sensors)
-//     console.log('Map ready status:', isMapReady)
-//     console.log('Map reference:', mapRef.current)
-
-//     if (!mapRef.current || !data?.sensors || !isMapReady) {
-//       console.log('Map, data, or ready status not available:', {
-//         mapRef: !!mapRef.current,
-//         sensors: !!data?.sensors,
-//         isMapReady
-//       })
-//       return
-//     }
-
-//     const map = mapRef.current
-//     console.log('Adding markers to map:', map)
-
-//     // Force a map resize before adding markers
-//     map.invalidateSize()
-
-//     // Clear existing markers if any
-//     map.eachLayer((layer) => {
-//       if (layer instanceof L.Marker && layer !== markerRef.current) { // Don't remove user marker
-//         console.log('Removing existing marker:', layer)
-//         map.removeLayer(layer)
-//       }
-//     })
-
-//     // Add markers immediately without delay
-//     data.sensors.forEach((sensor) => {
-//       console.log('Processing sensor:', {
-//         name: sensor.name,
-//         location: sensor.location,
-//         lat: sensor.latitude,
-//         lng: sensor.longitude,
-//         metrics: sensor.metrics
-//       })
-
-//       // Validate coordinates
-//       if (!sensor.latitude || !sensor.longitude) {
-//         console.error('Invalid coordinates for sensor:', sensor.name)
-//         return
-//       }
-
-//       const content = `
-//         <div style="padding: 10px;">
-//           <h3>${sensor.name || 'Unnamed Sensor'}</h3>
-//           <p>Location: ${sensor.location || 'No location specified'}</p>
-//           ${sensor.metrics && sensor.metrics.length > 0
-//             ? sensor.metrics.map(metric => `
-//                 <p>${metric.type}: ${metric.value}</p>
-//               `).join('')
-//             : '<p>No metrics available</p>'
-//           }
-//           <button onclick="window.open('https://www.google.com/maps?q=${sensor.latitude},${sensor.longitude}', '_blank')">
-//             View on Google Maps
-//           </button>
-//         </div>
-//       `
-
-//       try {
-//         console.log('Creating marker at coordinates:', [sensor.latitude, sensor.longitude])
-//         const marker = L.marker([sensor.latitude, sensor.longitude], {
-//           icon: sensorIcon
-//         })
-//           .bindPopup(content, {
-//             maxWidth: 300,
-//             className: 'custom-popup',
-//           })
-//           .addTo(map)
-
-//         console.log('Successfully added marker for sensor:', sensor.name)
-//         console.log('Marker position:', marker.getLatLng())
-//         console.log('Marker visible:', marker.getElement()?.style.display !== 'none')
-//       } catch (error) {
-//         console.error('Error adding marker for sensor:', sensor.name, error)
-//       }
-//     })
-//   }, [data, isMapReady])
-
-//   // Log any query errors but don't block the map
-//   useEffect(() => {
-//     if (queryError) {
-//       console.error('GraphQL query error:', queryError)
-//       // Don't set error state, just log it
-//     }
-//   }, [queryError])
-
-//   if (loading) {
-//     return <div className="map-wrapper">Loading map data...</div>
-//   }
-
-//   return (
-//     <div className="map-wrapper" style={{ width: '100%' }}>
-//       <div
-//         ref={mapContainerRef}
-//         className="map-container"
-//         style={{
-//           width: '100%',
-//           touchAction: 'none',
-//         }}
-//       />
-//       {error && (
-//         <div className="map-error">
-//           {error}
-//         </div>
-//       )}
-//     </div>
-//   )
-// }
-
-// // Add this CSS to ensure the map container has proper dimensions
-// const styles = `
-//   .map-wrapper {
-//     position: relative;
-//     width: 100%;
-//   }
-//   .map-container {
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     width: 100%;
-//     z-index: 1;
-//   }
-//   .map-error {
-//     position: absolute;
-//     top: 10px;
-//     left: 10px;
-//     z-index: 2;
-//     background: white;
-//     padding: 10px;
-//     border-radius: 4px;
-//     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-//   }
-// `
-
-// // Add the styles to the document
-// const styleSheet = document.createElement("style")
-// styleSheet.innerText = styles
-// document.head.appendChild(styleSheet)
-
-// export default Map

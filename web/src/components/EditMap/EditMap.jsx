@@ -21,6 +21,7 @@ import ahupuaaData from './data/Ahupuaa.json'
 import zonesData from './data/Zones.json'
 import ResetViewControl from '../ResetViewControl/ResetViewControl'
 import { set } from '@redwoodjs/forms'
+import L from 'leaflet'
 
 const Info = ({ position, selected }) => {
   // NOTE: This is a hardcoded value for the number of sensors
@@ -69,6 +70,7 @@ const EditMap = () => {
   const zoomToFeature = (e) => {
     const map = mapRef.current
     if (map) {
+      console.log('Zooming to ahupuaa')
       map.fitBounds(e.target.getBounds())
     }
   }
@@ -82,7 +84,7 @@ const EditMap = () => {
       fillOpacity: 0.4,
     })
 
-    // Upding the selected ahupuaa
+    // Updating the selected ahupuaa
     setSelected(layer.feature.properties.ahupuaa)
 
     // Bring the layer to the front, so that outlines is not hidden
@@ -95,14 +97,44 @@ const EditMap = () => {
     setSelected(null)
   }
 
-  const handleMarkerClick = (zone) => {
+  const handleProjectClick = (project) => {
     const map = mapRef.current
     if (map) {
-      const coord = [zone.latitude, zone.longitude]
-      console.log(zone)
-      map.setView(coord, zone.zoom)
+      console.log('Clicked zone type: zone')
+      console.log('Clicked zone:', project)
+      const bounds = L.geoJSON({
+        type: "Feature",
+        geometry: project.geometry
+      }).getBounds()
+      map.fitBounds(bounds)
+      map.setZoom(project.properties.zoom)
     }
   }
+
+  // Convert zones to GeoJSON format for rendering
+  const zonesGeoJSON = {
+    type: "FeatureCollection",
+    features: zonesData.zones.map(zone => ({
+      type: "Feature",
+      geometry: zone.polygon.geometry,
+      properties: {
+        id: zone.id,
+        name: zone.name,
+        zoom: zone.zoom
+      }
+    }))
+  }
+
+  // Get all sensors from all zones
+  const sensors = zonesData.zones.flatMap(zone =>
+    zone.patches.flatMap(patch =>
+      patch.sensors.map(sensor => ({
+        ...sensor,
+        zoneName: zone.name,
+        patchName: patch.name
+      }))
+    )
+  )
 
   return (
     <MapContainer
@@ -153,47 +185,85 @@ const EditMap = () => {
                 weight: 2,
                 fill: true,
                 fillOpacity: 0.1,
+                interactive: true,
+                zIndex: 1
               }}
-              onEachFeature={(feature, layer) => {
-                layer.on({
-                  click: zoomToFeature,
-                  mouseover: highlightFeature,
-                  mouseout: resetHighlight,
-                })
+              eventHandlers={{
+                click: (e) => {
+                  console.log('Zooming to ahupuaa:', e.layer.feature.properties.ahupuaa);
+                  zoomToFeature(e);
+                },
+                mouseover: (e) => highlightFeature(e.layer),
+                mouseout: (e) => resetHighlight(e.layer)
+              }}
+            />
+          </FeatureGroup>
+        </LayersControl.Overlay>
+        <LayersControl.Overlay checked name="Zones">
+          <FeatureGroup>
+            <GeoJSON
+              data={zonesGeoJSON}
+              style={{
+                weight: 3,
+                color: '#4CAF50',
+                fillColor: '#4CAF50',
+                fillOpacity: 0.2,
+                interactive: true,
+                zIndex: 2
+              }}
+              eventHandlers={{
+                click: (e) => {
+                  L.DomEvent.stopPropagation(e.originalEvent);
+                  handleProjectClick(e.layer.feature);
+                },
+                mouseover: (e) => {
+                  L.DomEvent.stopPropagation(e.originalEvent);
+                  const layer = e.layer;
+                  console.log('Hovering over zone:', e.layer.feature.properties.name);
+                  console.log('Zone details:', e.layer.feature);
+                  layer.setStyle({
+                    weight: 5,
+                    color: '#4CAF50',
+                    fillOpacity: 0.4,
+                  });
+                  layer.bindPopup(
+                    `<h3>${e.layer.feature.properties.name}</h3>
+                    <button class="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors" onclick="window.location.href='/sensor/${e.layer.feature.properties.id}'">
+                      View Zone
+                    </button>`
+                  ).openPopup();
+                },
+                mouseout: (e) => {
+                  L.DomEvent.stopPropagation(e.originalEvent);
+                  const layer = e.layer;
+                  layer.setStyle({
+                    weight: 3,
+                    color: '#4CAF50',
+                    fillOpacity: 0.2,
+                  });
+                }
               }}
             />
           </FeatureGroup>
         </LayersControl.Overlay>
         <LayersControl.Overlay checked name="Sensor Stations">
           <LayerGroup>
-            {/* Based on the focused ahupuaa, shows the sensor stations associated with it*/}
-          </LayerGroup>
-        </LayersControl.Overlay>
-        <LayersControl.Overlay checked name="Zones">
-          <LayerGroup>
-              {
-                zonesData.zones.map((zone, index) => (
-                  <Marker
-                    key={index}
-                    color="green"
-                    position={[zone.latitude, zone.longitude]}
-                    eventHandlers={{
-                      click: () => handleMarkerClick(zone),
-                      mouseover: (e) => e.target.openPopup(),
-                    }}
-                    >
-                    <Popup
-                    >
-                        <h3>{zone.name}</h3>
-                        <Link routes={routes.sensor({ id: zone.id })}>
-                          <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
-                            View Sensor
-                          </button>
-                        </Link>
-                    </Popup>
-                    </Marker>
-                ))
-              }
+            {sensors.map((sensor, index) => (
+              <Marker
+                key={index}
+                position={[sensor.latitude, sensor.longitude]}
+              >
+                <Popup>
+                  <div>
+                    <h3>{sensor.name}</h3>
+                    <p>Zone: {sensor.zoneName}</p>
+                    <p>Patch: {sensor.patchName}</p>
+                    <p>{sensor.metadata.description}</p>
+                    <p>Latest Value: {sensor.data[sensor.data.length - 1].value} {sensor.metadata.unit}</p>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
           </LayerGroup>
         </LayersControl.Overlay>
       </LayersControl>
