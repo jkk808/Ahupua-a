@@ -7,6 +7,7 @@
     ]
   },
   "devDependencies": {
+    "@redwoodjs/cli-storybook-vite": "8.5.0",
     "@redwoodjs/core": "8.5.0",
     "@redwoodjs/project-config": "8.5.0",
     "prettier-plugin-tailwindcss": "^0.5.12"
@@ -28,6 +29,7 @@
   "dependencies": {
     "@shadcn/ui": "^0.0.4",
     "chart.js": "^4.4.8",
+    "lunarphase-js": "^2.0.3",
     "prettier": "^3.5.3",
     "react": "^19.0.0",
     "react-chartjs-2": "^5.3.0"

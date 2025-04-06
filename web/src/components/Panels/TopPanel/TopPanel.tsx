@@ -1,5 +1,6 @@
 import { Link, routes } from "@redwoodjs/router";
 import React, { useEffect, useState } from "react";
+import { Moon } from "lunarphase-js";
 
 const TopPanel = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -8,6 +9,12 @@ const TopPanel = () => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  // Moon Phases
+const date = new Date();
+const phase = Moon.lunarPhase(date);
+const phaseEmoji = Moon.lunarPhaseEmoji();
+
 
   return (
     <header className="w-full bg-white border-b border-gray-200 px-6 py-4">
@@ -55,6 +62,8 @@ const TopPanel = () => {
               </div>
               <div className="text-md font-semibold">
                 Hoku
+                <div>{phase}</div>
+                <div> {phaseEmoji}</div>
               </div>
           </div>
 
