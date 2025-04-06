@@ -63,7 +63,7 @@ const TopPanel = () => {
             <div className="text-xs text-gray-600">
                 MOON PHASE
               </div>
-              <div className="text-md font-semibold">
+              <div className="text-md flex font-semibold">
                 <div>{phase}</div>
                 <div> {phaseEmoji}</div>
               </div>
