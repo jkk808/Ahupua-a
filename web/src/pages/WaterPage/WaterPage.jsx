@@ -7,10 +7,10 @@ const WaterPage = () => {
     <>
       <Metadata title="Water" description="Water page" />
 
-      <h1>Water Quality Sensors</h1>      
-      
-      <div className='flex justify-center gap-{20px}'>        
-        <GraphCell type={"tds"}></GraphCell>
+      <h1>Water Quality Sensors</h1>
+
+      <div className='flex justify-center gap-{20px}'>
+        {/* line graphs */}
         <GraphCell type={"ntu"}></GraphCell>
       </div>
 
