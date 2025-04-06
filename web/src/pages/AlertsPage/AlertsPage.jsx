@@ -1,6 +1,7 @@
 import { Link, routes } from '@redwoodjs/router'
-import { Metadata } from '@redwoodjs/web'
+import { Metadata} from '@redwoodjs/web'
 import SensorsCell from 'src/components/Sensor/SensorsCell'
+import { TextAreaField } from '@redwoodjs/forms'
 
 const AlertsPage = () => {
   return (
@@ -12,17 +13,36 @@ const AlertsPage = () => {
        <table className="rw-table">
          <thead>
            <tr>
-             <th>Id</th>
+            <th>Date</th>
+             <th>Time</th>
              <th>Name</th>
              <th>Type</th>
              <th>Location</th>
              <th>Metric</th>
-             <th>Time</th>
              <th>Comments</th>
-             <th>&nbsp;</th>
            </tr>
          </thead>
          <tbody>
+          <tr key="alert">
+            <td>
+              3:00pm
+            </td>
+            <td>
+              SS01-01
+            </td>
+            <td>
+              Water Temp
+            </td>
+            <td>
+              Lo'i 1
+            </td>
+            <td>
+              82
+            </td>
+            <td>
+              <textarea/>
+            </td>
+          </tr>
            {/* {sensors.map((sensor) => (
              <tr key={sensor.id}>
                <td>{truncate(sensor.id)}</td>

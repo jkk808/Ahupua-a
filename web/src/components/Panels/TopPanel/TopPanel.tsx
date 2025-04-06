@@ -1,6 +1,8 @@
 import { Link, routes } from "@redwoodjs/router";
 import React, { useEffect, useState } from "react";
 import { Moon } from "lunarphase-js";
+import AlertDot from "../../Buttons/AlertDot";
+
 
 const TopPanel = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -11,9 +13,10 @@ const TopPanel = () => {
   }, []);
 
   // Moon Phases
-const date = new Date();
-const phase = Moon.lunarPhase(date);
-const phaseEmoji = Moon.lunarPhaseEmoji();
+    const date = new Date();
+    const phase = Moon.lunarPhase(date);
+    const phaseEmoji = Moon.lunarPhaseEmoji();
+    const isWaxing = Moon.isWaxing();
 
 
   return (
@@ -74,6 +77,7 @@ const phaseEmoji = Moon.lunarPhaseEmoji();
                   Alerts
                 </Link>
               </button>
+              <AlertDot hasAlert={true}/>
           </div>
 
         </div>
