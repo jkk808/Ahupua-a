@@ -33,6 +33,13 @@ model Metric {
   sensorID  Int
 }
 
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  body      String
+  createdAt DateTime @default(now())
+}
+
 // USING STRING AS PLACEHOLDER FOR THIS ENUM
 // enum MetricType {
 //   TEMP

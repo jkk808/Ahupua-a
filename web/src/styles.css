@@ -1,0 +1,15 @@
+    /* styles.css */
+    .alert-container {
+      position: relative;
+      display: inline-block; /* Or other display as needed */
+    }
+
+    .alert-dot {
+      position: absolute;
+      top: -5px; /* Adjust position as needed */
+      right: -5px; /* Adjust position as needed */
+      width: 8px; /* Adjust size as needed */
+      height: 8px; /* Adjust size as needed */
+      background-color: red; /* Or your desired color */
+      border-radius: 50%;
+    }
