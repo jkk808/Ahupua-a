@@ -3,6 +3,7 @@ import { useParams } from '@redwoodjs/router'
 import PatchCell from 'src/components/PatchCell/PatchCell'
 import { useState } from 'react'
 import GraphCell from 'src/components/Graph/GraphCell'
+import GraphPatchCell from 'src/components/GraphPatchCell/GraphPatchCell'
 
 const PatchPage = () => {
   const { id } = useParams()
@@ -36,8 +37,11 @@ const PatchPage = () => {
           <h2 className="text-xl font-bold capitalize mb-4">{activeTab}</h2>
 
           {/* Replace this with real data once your PatchCell is ready */}
-          {activeTab === 'Water' &&
-            <GraphCell key={activeTab} type='ntu'></GraphCell>
+          {activeTab === 'Water' && (
+            <div className='flex justify-center gap-{20px}'>
+              <GraphPatchCell key={activeTab} type='ntu' name='top bed'></GraphPatchCell>
+            </div>
+          )
           }
           {activeTab === 'Soil' &&
             <GraphCell key={activeTab} type='s_ph'></GraphCell>

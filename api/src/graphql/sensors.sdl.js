@@ -7,11 +7,11 @@ export const schema = gql`
   }
 
   type Metric {
-    id: Int!   
+    id: Int!
     value: Float
-    timestamp: DateTime   
-    type: String     
-    sensor: Sensor    
+    timestamp: DateTime
+    type: String
+    sensor: Sensor
     sensorID: Int!
   }
 
@@ -19,6 +19,7 @@ export const schema = gql`
     sensors: [Sensor!]! @requireAuth
     sensorsData(type: String!): [Sensor!]! @requireAuth
     sensor(id: Int!): Sensor @requireAuth
+    sensorsDataByLocation(name: String!, type: String!): Sensor @requireAuth
   }
 
   input CreateSensorInput {
