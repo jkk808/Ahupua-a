@@ -1,0 +1,67 @@
+[
+  {
+    "name": "Zinc",
+    "value": "0.04",
+    "description": ""
+  },
+  {
+    "name": "Sulfur",
+    "value": "56",
+    "description": ""
+  },
+  {
+    "name": "Bacteria Name",
+    "value": "56",
+    "description": ""
+  },
+  {
+    "name": "Magnesium",
+    "value": "3.4",
+    "description": ""
+  },
+  {
+    "name": "Copper",
+    "value": "5.4",
+    "description": ""
+  },
+  {
+    "name": "Invasive Plant name",
+    "value": "1",
+    "description": ""
+  },
+  {
+    "name": "Iron",
+    "value": "12",
+    "description": ""
+  },
+  {
+    "name": "Aluminum",
+    "value": "12",
+    "description": ""
+  },
+  {
+    "name": "Nitrate",
+    "value": "2.0",
+    "description": ""
+  },
+  {
+    "name": "Nitrite",
+    "value": "1.12",
+    "description": ""
+  },
+  {
+    "name": "Boron",
+    "value": "2",
+    "description": ""
+  },
+  {
+    "name": "Phosphorus",
+    "value": "1.02",
+    "description": ""
+  },
+  {
+    "name": "Ammonium",
+    "value": "12",
+    "description": ""
+  }
+]

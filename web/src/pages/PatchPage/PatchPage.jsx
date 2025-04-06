@@ -4,6 +4,7 @@ import PatchCell from 'src/components/PatchCell/PatchCell'
 import { useState } from 'react'
 import GraphCell from 'src/components/Graph/GraphCell'
 import GraphPatchCell from 'src/components/GraphPatchCell/GraphPatchCell'
+import SoilCompositionCell from 'src/components/SoilComposition/SoilCompositionCell'
 
 const PatchPage = () => {
   const { location } = useParams()
@@ -53,7 +54,18 @@ const PatchPage = () => {
               </div>
             )
           }
-          {activeTab === 'Soil Composition' && <p>Soil composition details will go here.</p>}
+          {activeTab === 'Soil Composition' &&
+          (
+            <div style={{ display: 'flex' }}>
+              <div style={{ flex: 1 }}>
+                <SoilCompositionCell location={location} />
+              </div>
+              <div style={{ flex: 1 }}>
+                Description box
+              </div>
+            </div>
+          )
+          }
         </div>
       </div>
     </>

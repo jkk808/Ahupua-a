@@ -17648,6 +17648,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"papaparse@npm:^5.5.2":
+  version: 5.5.2
+  resolution: "papaparse@npm:5.5.2"
+  checksum: 10c0/83b8c0cf570395581a42331cd9231194dbba43bc8c608026739f5180827506575993dc788def039a9666bc103e2a96075de8732ea8a63e507b74c02aa757bcd5
+  languageName: node
+  linkType: hard
+
 "param-case@npm:^3.0.4":
   version: 3.0.4
   resolution: "param-case@npm:3.0.4"
@@ -22370,6 +22377,7 @@ __metadata:
     humanize-string: "npm:2.1.0"
     leaflet: "npm:^1.9.4"
     leaflet-draw: "npm:^1.0.4"
+    papaparse: "npm:^5.5.2"
     postcss: "npm:^8.5.3"
     postcss-loader: "npm:^8.1.1"
     react: "npm:18.3.1"
