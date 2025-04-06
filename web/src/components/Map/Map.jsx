@@ -104,13 +104,14 @@ const Map = () => {
     }
   }
 
+
   return (
     <MapContainer
       ref={mapRef}
       center={center}
       zoom={zoom}
       zoomSnap={0.1}
-      maxZoom={25}
+      maxZoom={22}
       attributionControl={false}
       style={{ height: '100%', width: '100%' }}
     >
@@ -130,16 +131,16 @@ const Map = () => {
         <LayersControl.BaseLayer name="Satellite (Google)" checked>
           <TileLayer
             url="http://{s}.google.com/vt/lyrs=s,p&x={x}&y={y}&z={z}"
-            maxNativeZoom={40}
-            maxZoom={40}
+            maxNativeZoom={22}
+            maxZoom={22}
             subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
           />
         </LayersControl.BaseLayer>
         <LayersControl.BaseLayer name="Street (Google)">
           <TileLayer
             url="http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
-            maxNativeZoom={30}
-            maxZoom={40}
+            maxNativeZoom={22}
+            maxZoom={22}
             subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
           />
         </LayersControl.BaseLayer>
