@@ -35,10 +35,13 @@ const SidePanel = () => {
               <Patch></Patch>
             </div>
           )}
+
           <div className=''>
-            <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
-              Recommendations
-            </button>
+            <Link to={routes.llm()}>
+              <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
+                Recommendations
+              </button>
+            </Link>
           </div>
           <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
             All Sensors
