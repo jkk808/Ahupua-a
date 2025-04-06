@@ -7,7 +7,7 @@ const PatchPage = () => {
   const { id } = useParams()
   const [activeTab, setActiveTab] = useState('water')
 
-  const tabs = ['water', 'soil', 'soil composition']
+  const tabs = ['Overall Health', 'Water', 'Soil', 'Soil Composition']
 
   return (
     <>
