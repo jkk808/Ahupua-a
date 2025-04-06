@@ -5,13 +5,7 @@ import { useState } from 'react'
 import GraphCell from 'src/components/Graph/GraphCell'
 import GraphPatchCell from 'src/components/GraphPatchCell/GraphPatchCell'
 
-const patches = [
-  { id: 'patch-1', name: 'top bed' },
-  { id: 'patch-2', name: 'top-middle bed' },
-  { id: 'patch-3', name: 'middle-bottom bed' },
-  { id: 'patch-4', name: 'bottom bed' },
-  // Add as many as you want
-]
+
 
 const PatchPage = () => {
   const { name } = useParams()
@@ -48,8 +42,8 @@ const PatchPage = () => {
           {/* Replace this with real data once your PatchCell is ready */}
           {activeTab === 'Water' && (
             <div className='flex justify-center gap-{20px}'>
-              <GraphPatchCell key={activeTab} type='ntu' name={patches[0].name}></GraphPatchCell>
-              <GraphPatchCell key={activeTab} type='w_ph' name={patches[0].name}></GraphPatchCell>
+              <GraphPatchCell key={activeTab} type='ntu' name={name}></GraphPatchCell>
+              <GraphPatchCell key={activeTab} type='w_ph' name={name}></GraphPatchCell>
             </div>
           )
           }
