@@ -39,12 +39,10 @@ const filterDataByType = ( data, type ) => {
 const determineScore = ( filtered_vals , type ) => {
   const score = 0.0
 
-  // determine weights of how water health is scored based on research
-  // for now just will return a predefined number
   switch (type) {
     case 'water':
-      return 0.85
-    case 'soil':
+      // determine weights of how water health is scored based on research
+      // for now just will return a predefined number
       return 0.85
     default:
       score
@@ -62,7 +60,7 @@ export const Failure = ({ error }) => (
 
 export const Success = ({ metricsMostRecent }) => {
   const waterScore = determineScore(filterDataByType(metricsMostRecent, 'water'), 'water')
-  const soilScore = determineScore(filterDataByType(metricsMostRecent, 'soil'), 'soil')
+  // const [soilData] = filterDataByType(metricsMostRecent, 'soil')
   // const [ahupuaaData] = filterDataByType(metricsMostRecent, 'ahupuaa')
   return (
     <>
@@ -83,17 +81,6 @@ export const Success = ({ metricsMostRecent }) => {
                 Water Quality
                 </h3>
                 <HealthScore score={waterScore}></HealthScore>
-              </button>
-            </Link>
-          </div>
-
-          <div>
-            <Link to={routes.soil()}>
-            <button className='border border-gray-200 drop-shadow-sm w-full text-left p-2 hover:bg-gray-50 rounded-lg transition-colors'>
-                <h3 className="text-sm font-medium text-gray-500 mb-2">
-                Soil Quality
-                </h3>
-                <HealthScore score={soilScore}></HealthScore>
               </button>
             </Link>
           </div>
