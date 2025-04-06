@@ -2,6 +2,7 @@ import { Link, routes, navigate } from '@redwoodjs/router'
 import HealthScoresCell from 'src/components/HealthScoresCell/HealthScoresCell'
 import Patch from 'src/components/Patch/Patch'
 import { useState } from 'react'
+import PatchButton from 'src/components/PatchButton/PatchButton'
 
 const SidePanel = () => {
   const [open, setOpen] = useState(false)
@@ -12,27 +13,21 @@ const SidePanel = () => {
       {/* holds the links to different pages for water and soil */}
       {/* <HealthScoresCell></HealthScoresCell> */}
 
-      <div className="space-y-4 pt-4">
-        <button
-          onClick={toggleDropdown}
-          className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
-          Patches
-        </button>
+        <div className="space-y-4 pt-4">
+          <Link to={routes.home()}>
+            <button
+            onClick={toggleDropdown}
+            className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
+                Patches
+            </button>
+          </Link>
 
           {open && (
             <div className="origin-top-right mt-2 w-full">
-              <Patch></Patch>
-              <Patch></Patch>
-              <Patch></Patch>
-              <Patch></Patch>
-              <Patch></Patch>
-              <Patch></Patch>
-              <Patch></Patch>
-              <Patch></Patch>
-              <Patch></Patch>
-              <Patch></Patch>
-              <Patch></Patch>
-              <Patch></Patch>
+              <PatchButton></PatchButton>
+              <PatchButton></PatchButton>
+              <PatchButton></PatchButton>
+              <PatchButton></PatchButton>
             </div>
           )}
 
