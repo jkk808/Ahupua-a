@@ -19,36 +19,39 @@ const SidePanel = () => {
           Patches
         </button>
 
-        {open && (
-          <div className="origin-top-right mt-2 w-full">
-            <Patch></Patch>
-            <Patch></Patch>
-            <Patch></Patch>
-            <Patch></Patch>
-            <Patch></Patch>
-            <Patch></Patch>
-            <Patch></Patch>
-            <Patch></Patch>
-            <Patch></Patch>
-            <Patch></Patch>
-            <Patch></Patch>
-            <Patch></Patch>
+          {open && (
+            <div className="origin-top-right mt-2 w-full">
+              <Patch></Patch>
+              <Patch></Patch>
+              <Patch></Patch>
+              <Patch></Patch>
+              <Patch></Patch>
+              <Patch></Patch>
+              <Patch></Patch>
+              <Patch></Patch>
+              <Patch></Patch>
+              <Patch></Patch>
+              <Patch></Patch>
+              <Patch></Patch>
+            </div>
+          )}
+
+          <div className=''>
+            <Link to={routes.llm()}>
+              <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
+                Recommendations
+              </button>
+            </Link>
           </div>
-        )}
-        <div className=''>
           <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
-            Recommendations
+            All Sensors
           </button>
-        </div>
-        <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
-          All Sensors
-        </button>
-        <Link to={routes.map()}
-          className="block border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 mt-6 hover:bg-gray-50 rounded-lg transition-colors"
-        >
-          Map
-        </Link>
-        {/* <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
+          <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <Link to={routes.map()}>
+            Map
+            </Link>
+          </button>
+          {/* <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
             Export Data
           </button> */}
         {/* <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
