@@ -15,6 +15,7 @@ import MainPanelLayout from './layouts/MainPanelsLayout/MainPanelsLayout'
 const Routes = () => {
   return (
     <Router>
+      <Route path="/terrace" page={TerracePage} name="terrace" />
       <Set wrap={MainPanelLayout} title="Sensors" titleTo="sensors" buttonLabel="New Sensor" buttonTo="newSensor">
         <Route path="/soil" page={SoilPage} name="soil" />
         <Route path="/water" page={WaterPage} name="water" />
