@@ -7,6 +7,7 @@
     ]
   },
   "devDependencies": {
+    "@redwoodjs/cli-data-migrate": "8.5.0",
     "@redwoodjs/cli-storybook-vite": "8.5.0",
     "@redwoodjs/core": "8.5.0",
     "@redwoodjs/project-config": "8.5.0",
@@ -27,7 +28,7 @@
     "@storybook/react-dom-shim@npm:7.6.17": "https://verdaccio.tobbe.dev/@storybook/react-dom-shim/-/react-dom-shim-8.0.8.tgz"
   },
   "scripts": {
-    "build": "yarn rw build --verbose"
+    "build": "yarn rw build --verbose && yarn rw prisma migrate deploy && yarn rw data-migrate up"
   },
   "dependencies": {
     "@shadcn/ui": "^0.0.4",
