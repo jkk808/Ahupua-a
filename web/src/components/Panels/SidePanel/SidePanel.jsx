@@ -10,9 +10,11 @@ const SidePanel = () => {
 
         <div className="space-y-4 pt-4">
           <div className=''>
-            <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
-              Recommendations
-            </button>
+          <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <Link to={routes.llm()}>
+            Recommendations
+            </Link>
+          </button>
           </div>
           <button className="border border-gray-200 drop-shadow-sm w-full text-center px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors">
             All Sensors
