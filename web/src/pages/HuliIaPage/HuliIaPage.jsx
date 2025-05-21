@@ -17,10 +17,10 @@ const HuliIaPage = () => {
       <Metadata title="HuliIa" description="HuliIa page" />
 
       <h1 className='text-xl pb-4'>
-        Huli ʻIa
+        Kilo Page
       </h1>
       <div>
-        Huli ʻia is an observational process documenting seasonal changes and shifts across entire landscapes, ma uka to ma kai and everything in between, above and around. It is a tool used to identify dominant correlating cycles to support and guide our management and best-practices in supporting a productive and thriving community: ʻĀina Momona.
+        Borrowing from huli ʻia, an observational process documenting seasonal changes and shifts across entire landscapes, ma uka to ma kai and everything in between, above and around. It is a tool used to identify dominant correlating cycles to support and guide our management and best-practices in supporting a productive and thriving community: ʻĀina Momona.
       </div>
       <div className="p-6">
       <div className="mb-4">
