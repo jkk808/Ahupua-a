@@ -14,7 +14,7 @@ const HuliIaPage = () => {
   }
   return (
     <>
-      <Metadata title="Kilo" description="Kilo page" />
+      <Metadata title="HuliIa" description="HuliIa page" />
 
       <h1 className='text-xl pb-4'>
         Kilo Page
