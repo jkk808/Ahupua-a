@@ -23,7 +23,7 @@ const Routes = () => {
       </Set>
       <Set wrap={MainPanelLayout} title="Sensors" titleTo="sensors" buttonLabel="New Sensor" buttonTo="newSensor">
         <Route path="/sensor-health" page={SensorHealthPage} name="sensorHealth" />
-        <Route path="/huli-ia" page={HuliIaPage} name="huliʻia" />
+        <Route path="/kilo" page={kilo} name="kilo" />
         <Route path="/patch/{location:String}" page={PatchPage} name="patch" />
         {/* <Route path="/soil" page={SoilPage} name="soil" /> */}
         {/* <Route path="/water" page={WaterPage} name="water" /> */}
