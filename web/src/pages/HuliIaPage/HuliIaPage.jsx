@@ -117,10 +117,13 @@ const HuliIaPage = () => {
         </Submit>
       </Form>
     </div>
+      <p style="font-size:8pt; line-height:1.4;">
+  Mahalo to <a href="https://www.namakaonaona.org/" target="_blank" rel="noopener noreferrer">Nā Maka Onaona</a> and Pelika Andrade for their foundational work, ʻike, and contributions to ʻāina-based education and community research; this project draws from materials and insights shared on <a href="https://auamo.org" target="_blank" rel="noopener noreferrer">Auamo.org</a> and is deeply grateful for the ʻike shared by cultural practitioners, researchers, and community leaders featured in these platforms; this work is intended for <strong>research purposes only</strong>, unless otherwise explicitly permitted or noted—please cite responsibly and with aloha.
+  </p>
 
-    <p>
+{/*     <p>
         Mahalo to Auamo.org for providing this resource to aid na kilo ʻāina & huli ʻia.
-    </p>
+    </p> */}
     </>
   )
 }
