@@ -60,7 +60,7 @@ const SidePanel = () => {
             </div>
           )}
 
-        <Link to={routes.HuliIa()}>
+        <Link to={routes.kilo()}>
           <button className="mt-4 w-full rounded-lg border border-gray-200 px-4 py-3 text-center drop-shadow-sm transition-colors hover:bg-gray-50">
             Kilo
           </button>
